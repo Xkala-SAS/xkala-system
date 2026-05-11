@@ -1,0 +1,50 @@
+services:
+  mysql:
+    image: mysql:8.0
+
+    container_name: xkala_mysql
+
+    restart: always
+
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: xkala_system
+
+    ports:
+      - "3307:3306"
+
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  backend:
+    build:
+      context: ./back
+      dockerfile: Dockerfile.dev
+
+    container_name: xkala_backend
+
+    restart: always
+
+    depends_on:
+      - mysql
+
+    ports:
+      - "8000:8000"
+
+    volumes:
+      - ./back:/app
+
+    env_file:
+      - ./back/.env.dev
+
+    command: >
+      sh -c "
+      alembic upgrade head &&
+      uvicorn app.main:app
+      --host 0.0.0.0
+      --port 8000
+      --reload
+      "
+
+volumes:
+  mysql_data:

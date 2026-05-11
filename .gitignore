@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Entorno virtual
+venv/
+.env
+
+# Uploads
+uploads/
+
+# Alembic
+alembic/versions/__pycache__/
+
+# Logs
+*.log
+
+# VSCode
+.vscode/
+
+# Linux
+.DS_Store
+Thumbs.db
+
+# Pytest
+.pytest_cache/
+
+# MySQL
+mysql_data/
+
+# Docker
+*.pid
+
+# Coverage
+htmlcov/
+.coverage
+
+# Cache
+.cache/
