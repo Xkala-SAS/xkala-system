@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from typing import List
+from typing import List, Optional
 
 from datetime import datetime
 
@@ -114,16 +114,16 @@ class UserProfileResponse(BaseModel):
 
     rol: str
 
-    documento: DocumentResponse
+    documento: Optional[DocumentResponse] = None
 
-    direccion: AddressResponse
+    direccion: Optional[AddressResponse] = None
 
-    contactos: List[ContactResponse]
+    contactos: List[ContactResponse] = []
 
-    afiliaciones: AffiliationsResponse
+    afiliaciones: Optional[AffiliationsResponse] = None
 
-    laboral: LaboralResponse
+    laboral: Optional[LaboralResponse] = None
 
-    tallas: SizesResponse
+    tallas: Optional[SizesResponse] = None
 
-    archivos: List[FileResponse]
+    archivos: List[FileResponse] = []

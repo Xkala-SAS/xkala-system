@@ -1,8 +1,9 @@
 import os
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import JSONResponse
 
 from sqlalchemy import text
 
@@ -14,6 +15,10 @@ from app.core.settings import settings
 
 from app.core.exceptions.handlers import (
     register_exception_handlers
+)
+
+from app.core.exceptions.auth_exceptions import (
+    InvalidCredentialsException
 )
 
 from app.infrastructure.database.db import engine
@@ -70,6 +75,21 @@ app = FastAPI(
 # ==========================================
 # EXCEPTION HANDLERS
 # ==========================================
+
+@app.exception_handler(
+    InvalidCredentialsException
+)
+async def invalid_credentials_handler(
+    request: Request,
+    exc: InvalidCredentialsException
+):
+    return JSONResponse(
+        status_code=401,
+        content={
+            "success": False,
+            "message": str(exc)
+        }
+    )
 
 register_exception_handlers(app)
 

@@ -9,6 +9,7 @@ from app.domain.user.exceptions.user_validation_exceptions import (
     MissingRoleException
 )
 
+
 class User:
 
     def __init__(
@@ -24,6 +25,7 @@ class User:
         id: str = None,
         estado: bool = True,
         created_at: datetime = None,
+        role=None
     ):
 
         self.id = id or str(uuid4())
@@ -32,12 +34,16 @@ class User:
         self.segundo_nombre = segundo_nombre
         self.primer_apellido = primer_apellido
         self.segundo_apellido = segundo_apellido
+
         self.fecha_nacimiento = fecha_nacimiento
 
         self.email = email
+
         self.password_hash = password_hash
 
         self.role_id = role_id
+
+        self.role = role
 
         self.estado = estado
 
@@ -79,10 +85,19 @@ class User:
             raise MissingRoleException()
 
     def is_active(self) -> bool:
+
         return self.estado
 
     def change_status(self, estado: bool):
+
         self.estado = estado
 
-    def check_password(self, password_hash: str) -> bool:
-        return self.password_hash == password_hash
+    def check_password(
+        self,
+        password_hash: str
+    ) -> bool:
+
+        return (
+            self.password_hash
+            == password_hash
+        )

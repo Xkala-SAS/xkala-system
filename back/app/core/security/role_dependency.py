@@ -1,19 +1,53 @@
-from fastapi import Depends, HTTPException
+from fastapi import (
+    Depends
+)
 
-from app.core.security.auth_dependency import get_current_user
+from app.core.security.auth_dependency import (
+    get_current_user
+)
+
+from app.core.exceptions.base_exception import (
+    AppException
+)
 
 
-def require_role(required_role_id: str):
+def require_role(
+    role_name: str
+):
 
     def role_checker(
-        current_user = Depends(get_current_user)
+
+        current_user = Depends(
+            get_current_user
+        )
     ):
 
-        if current_user.role_id != required_role_id:
+        user_role = (
+            current_user.role.nombre
+            if current_user.role
+            else None
+        )
 
-            raise HTTPException(
+        if not user_role:
+
+            raise AppException(
+
+                message="El usuario no tiene rol asignado",
+
                 status_code=403,
-                detail="No tienes permisos"
+
+                error_code="ROLE_NOT_ASSIGNED"
+            )
+
+        if user_role.lower() != role_name.lower():
+
+            raise AppException(
+
+                message="No tienes permisos para acceder",
+
+                status_code=403,
+
+                error_code="INSUFFICIENT_ROLE"
             )
 
         return current_user

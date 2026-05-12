@@ -177,22 +177,38 @@ class UserRepositoryImpl(UserRepository):
 
             self.db.commit()
             
-    def _to_domain(self, db_user: UserModel):
+    def _to_domain(
+    self,
+    db_user: UserModel
+    ):
 
         if not db_user:
             return None
-
+    
         return User(
+        
             id=db_user.id,
+    
             primer_nombre=db_user.primer_nombre,
+    
             segundo_nombre=db_user.segundo_nombre,
+    
             primer_apellido=db_user.primer_apellido,
+    
             segundo_apellido=db_user.segundo_apellido,
+    
             fecha_nacimiento=db_user.fecha_nacimiento,
+    
             email=db_user.email,
+    
             password_hash=db_user.password_hash,
+    
             role_id=db_user.role_id,
+    
+            role=db_user.role,
+    
             estado=db_user.estado,
+    
             created_at=db_user.created_at
         )
 

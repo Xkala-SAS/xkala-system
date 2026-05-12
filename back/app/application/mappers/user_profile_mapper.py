@@ -3,19 +3,19 @@ class UserProfileMapper:
     @staticmethod
     def to_response(user):
 
-        document = user.documents[0]
+        document = user.documents[0] if user.documents else None
 
-        address = user.addresses[0]
+        address = user.addresses[0] if user.addresses else None
 
-        health = user.health_info
+        health = user.health_info if user.health_info else None
 
-        contract = user.contract_info
+        contract = user.contract_info if user.contract_info else None
 
-        sizes = user.sizes
+        sizes = user.sizes if user.sizes else None
 
-        files = user.files
+        files = user.files if user.files else []
 
-        contacts = user.contacts
+        contacts = user.contacts if user.contacts else []
 
         return {
 
@@ -31,16 +31,19 @@ class UserProfileMapper:
 
             "estado": user.estado,
 
-            "rol": user.role.nombre,
+            "rol": user.role.nombre if user.role else None,
 
             "documento": {
 
                 "tipo":
-                    document.document_type.nombre,
+                    document.document_type.nombre
+                    if document and document.document_type else None,
 
                 "numero":
                     document.numero_documento
-            },
+                    if document else None
+
+            } if document else None,
 
             "direccion": {
 
@@ -51,11 +54,14 @@ class UserProfileMapper:
                     address.barrio,
 
                 "ciudad":
-                    address.city.nombre,
+                    address.city.nombre
+                    if address.city else None,
 
                 "departamento":
                     address.city.departamento
-            },
+                    if address.city else None
+
+            } if address else None,
 
             "contactos": [
 
@@ -76,32 +82,40 @@ class UserProfileMapper:
             "afiliaciones": {
 
                 "eps":
-                    health.eps.nombre,
+                    health.eps.nombre
+                    if health and health.eps else None,
 
                 "arl":
-                    health.arl.nombre,
+                    health.arl.nombre
+                    if health and health.arl else None,
 
                 "pension":
-                    health.pension_fund.nombre,
+                    health.pension_fund.nombre
+                    if health and health.pension_fund else None,
 
                 "cesantias":
                     health.severance_fund.nombre
-            },
+                    if health and health.severance_fund else None
+
+            } if health else None,
 
             "laboral": {
 
                 "cargo":
-                    contract.position.nombre,
+                    contract.position.nombre
+                    if contract and contract.position else None,
 
                 "tipo_contrato":
-                    contract.contract_type.nombre,
+                    contract.contract_type.nombre
+                    if contract and contract.contract_type else None,
 
                 "fecha_ingreso":
                     contract.fecha_ingreso,
 
                 "activo":
                     contract.estado_laboral
-            },
+
+            } if contract else None,
 
             "tallas": {
 
@@ -113,7 +127,8 @@ class UserProfileMapper:
 
                 "zapato":
                     sizes.shoe_size
-            },
+
+            } if sizes else None,
 
             "archivos": [
 

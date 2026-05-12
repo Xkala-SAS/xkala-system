@@ -1,45 +1,104 @@
-from datetime import datetime, timedelta
-from jose import JWTError, jwt
+from datetime import (
+    datetime,
+    timedelta,
+    timezone
+)
 
+from uuid import uuid4
 
-SECRET_KEY = "super_secret_key"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 60
+from jose import (
+    jwt,
+    JWTError,
+    ExpiredSignatureError
+)
+
+from app.core.settings import settings
+
+from app.core.exceptions.base_exception import (
+    AppException
+)
 
 
 class JWTHandler:
 
     @staticmethod
-    def create_access_token(data: dict):
+    def create_access_token(
+        data: dict
+    ) -> str:
+
+        now = datetime.now(
+            timezone.utc
+        )
+
+        expire = now + timedelta(
+            minutes=(
+                settings
+                .ACCESS_TOKEN_EXPIRE_MINUTES
+            )
+        )
 
         to_encode = data.copy()
 
-        expire = datetime.utcnow() + timedelta(
-            minutes=ACCESS_TOKEN_EXPIRE_MINUTES
-        )
-
         to_encode.update({
-            "exp": expire
+
+            "iat": now,
+
+            "exp": expire,
+
+            "jti": str(uuid4()),
+
+            "token_type": "access"
         })
 
-        return jwt.encode(
+        token = jwt.encode(
+
             to_encode,
-            SECRET_KEY,
-            algorithm=ALGORITHM
+
+            settings.SECRET_KEY,
+
+            algorithm=settings.ALGORITHM
         )
-    
+
+        return token
+
     @staticmethod
-    def decode_token(token: str):
+    def decode_token(
+        token: str
+    ) -> dict:
 
         try:
 
             payload = jwt.decode(
+
                 token,
-                SECRET_KEY,
-                algorithms=[ALGORITHM]
+
+                settings.SECRET_KEY,
+
+                algorithms=[
+                    settings.ALGORITHM
+                ]
             )
 
             return payload
 
+        except ExpiredSignatureError:
+
+            raise AppException(
+
+                message="Token expirado",
+
+                status_code=401,
+
+                error_code="TOKEN_EXPIRED"
+            )
+
         except JWTError:
-            return None
+
+            raise AppException(
+
+                message="Token inválido",
+
+                status_code=401,
+
+                error_code="INVALID_TOKEN"
+            )

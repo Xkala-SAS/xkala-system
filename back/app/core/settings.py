@@ -1,12 +1,27 @@
 import os
 
-from pydantic_settings import BaseSettings
+from pydantic_settings import (
+    BaseSettings,
+    SettingsConfigDict
+)
 
+
+# ==========================================
+# ENVIRONMENT
+# ==========================================
 
 ENV = os.getenv(
     "APP_ENV",
     "development"
 )
+
+if ENV not in [
+    "development",
+    "production"
+]:
+    raise ValueError(
+        f"APP_ENV inválido: {ENV}"
+    )
 
 
 env_file = (
@@ -16,7 +31,15 @@ env_file = (
 )
 
 
+# ==========================================
+# SETTINGS
+# ==========================================
+
 class Settings(BaseSettings):
+
+    # ======================================
+    # APP
+    # ======================================
 
     APP_NAME: str
 
@@ -24,11 +47,21 @@ class Settings(BaseSettings):
 
     DEBUG: bool
 
+
+    # ======================================
+    # SECURITY
+    # ======================================
+
     SECRET_KEY: str
 
     ALGORITHM: str
 
     ACCESS_TOKEN_EXPIRE_MINUTES: int
+
+
+    # ======================================
+    # DATABASE
+    # ======================================
 
     DB_HOST: str
 
@@ -40,25 +73,51 @@ class Settings(BaseSettings):
 
     DB_NAME: str
 
+
+    # ======================================
+    # CORS
+    # ======================================
+
     CORS_ORIGINS: str
 
+
+    # ======================================
+    # DATABASE URL
+    # ======================================
+
     @property
-    def DATABASE_URL(self):
+    def DATABASE_URL(self) -> str:
 
         return (
+
             f"mysql+pymysql://"
+
             f"{self.DB_USER}:"
+
             f"{self.DB_PASSWORD}@"
+
             f"{self.DB_HOST}:"
+
             f"{self.DB_PORT}/"
+
             f"{self.DB_NAME}"
         )
 
-    class Config:
 
-        env_file = env_file
+    # ======================================
+    # PYDANTIC CONFIG
+    # ======================================
 
-        extra = "ignore"
+    model_config = SettingsConfigDict(
 
+        env_file=env_file,
+
+        extra="ignore"
+    )
+
+
+# ==========================================
+# INSTANCE
+# ==========================================
 
 settings = Settings()
