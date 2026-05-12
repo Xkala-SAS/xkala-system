@@ -1,6 +1,6 @@
 from sqlalchemy import Column, String, ForeignKey
 
-from app.infrastructure.database.db import Base
+from app.infrastructure.database.base.base_class import Base
 
 
 

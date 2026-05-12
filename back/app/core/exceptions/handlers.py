@@ -1,144 +1,60 @@
 from fastapi import FastAPI, Request
-
 from fastapi.responses import JSONResponse
 
-from app.core.exceptions.auth_exceptions import (
-
-    InvalidCredentialsException,
-
-    InactiveUserException
-)
-from app.core.exceptions.file_exceptions import (
-
-    InvalidFileExtensionException,
-
-    FileTooLargeException
+from app.core.exceptions.base_exception import (
+    AppException
 )
 
-from app.core.logging.logger import (
-    logger
-)
+from app.core.logging.logger import logger
 
 
 def register_exception_handlers(
     app: FastAPI
 ):
 
-    # ======================================
-    # INVALID CREDENTIALS
-    # ======================================
-
-    @app.exception_handler(
-        InvalidCredentialsException
-    )
-    async def invalid_credentials_handler(
+    @app.exception_handler(AppException)
+    async def app_exception_handler(
         request: Request,
-        exc: InvalidCredentialsException
+        exc: AppException
     ):
 
         return JSONResponse(
 
-            status_code=401,
+            status_code=exc.status_code,
 
             content={
 
                 "success": False,
 
-                "error": exc.message
+                "message": exc.message,
+
+                "error_code": exc.error_code
             }
         )
-
-    # ======================================
-    # INACTIVE USER
-    # ======================================
-
-    @app.exception_handler(
-        InactiveUserException
-    )
-    async def inactive_user_handler(
-        request: Request,
-        exc: InactiveUserException
-    ):
-
-        return JSONResponse(
-
-            status_code=403,
-
-            content={
-
-                "success": False,
-
-                "error": exc.message
-            }
-        )
-
-    # ======================================
-    # GENERIC EXCEPTION
-    # ======================================
 
     @app.exception_handler(Exception)
     async def generic_exception_handler(
         request: Request,
         exc: Exception
     ):
-    
+
         logger.exception(
-        
+
             f"Unhandled exception "
             f"{request.method} "
             f"{request.url.path}"
         )
-    
+
         return JSONResponse(
-        
+
             status_code=500,
-    
-            content={
-            
-                "success": False,
-    
-                "error":
-                    "Internal server error"
-            }
-        )
-    
-
-    @app.exception_handler(
-    InvalidFileExtensionException
-    )
-    async def invalid_extension_handler(
-        request: Request,
-        exc: InvalidFileExtensionException
-    ):
-
-        return JSONResponse(
-
-            status_code=400,
 
             content={
 
                 "success": False,
 
-                "error": exc.message
-            }
-        )
-    
-    @app.exception_handler(
-        FileTooLargeException
-    )
-    async def file_too_large_handler(
-        request: Request,
-        exc: FileTooLargeException
-    ):
+                "message": "Internal server error",
 
-        return JSONResponse(
-
-            status_code=400,
-
-            content={
-
-                "success": False,
-
-                "error": exc.message
+                "error_code": "INTERNAL_SERVER_ERROR"
             }
         )

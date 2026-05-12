@@ -1,6 +1,13 @@
 from datetime import datetime
 from uuid import uuid4
-
+from app.domain.user.exceptions.user_validation_exceptions import (
+    InvalidEmailException,
+    MissingFirstNameException,
+    MissingLastNameException,
+    MissingDocumentException,
+    MissingPasswordException,
+    MissingRoleException
+)
 
 class User:
     def __init__(
@@ -35,22 +42,22 @@ class User:
 
     def _validate(self):
         if not self.primer_nombre:
-            raise ValueError("Primer nombre obligatorio")
+            raise MissingFirstNameException()
 
         if not self.primer_apellido:
-            raise ValueError("Primer apellido obligatorio")
+            raise MissingLastNameException()
 
         if "@" not in self.email:
-            raise ValueError("Email inválido")
+            raise InvalidEmailException()
 
         if not self.numero_documento:
-            raise ValueError("Número de documento obligatorio")
+            raise MissingDocumentException()
 
         if not self.password_hash:
-            raise ValueError("La contraseña es obligatoria")
+            raise MissingPasswordException()
 
         if not self.role_id:
-            raise ValueError("El rol es obligatorio")
+            raise MissingRoleException()
 
     def is_active(self) -> bool:
         return self.estado

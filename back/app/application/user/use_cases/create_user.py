@@ -1,6 +1,9 @@
 from app.domain.user.entities.user import User
 from app.domain.user.repositories.user_repository import UserRepository
 from app.core.security.password_hasher import PasswordHasher
+from app.domain.user.exceptions.user_validation_exceptions import (
+    UserAlreadyExistsException
+)
 
 
 class CreateUserUseCase:
@@ -33,7 +36,7 @@ class CreateUserUseCase:
         existing_email = self.user_repository.get_by_email(email)
 
         if existing_email:
-            raise ValueError("El email ya está registrado")
+            raise UserAlreadyExistsException()
         
         # hashear contraseña
         hashed_password = PasswordHasher.hash(password)

@@ -7,7 +7,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import relationship
 
-from app.infrastructure.database.db import Base
+from app.infrastructure.database.base.base_class import Base
 from app.infrastructure.database.base.base_model import (
     BaseModelMixin
 )

@@ -1,31 +1,14 @@
 from sqlalchemy import create_engine
 
-from sqlalchemy.orm import (
-    sessionmaker,
-    declarative_base
-)
+from sqlalchemy.orm import sessionmaker
 
 from app.core.settings import settings
 
-
-DATABASE_URL = (
-
-    f"mysql+pymysql://"
-
-    f"{settings.DB_USER}:"
-
-    f"{settings.DB_PASSWORD}@"
-
-    f"{settings.DB_HOST}:"
-
-    f"{settings.DB_PORT}/"
-
-    f"{settings.DB_NAME}"
-)
+from app.infrastructure.database.base.base_class import Base
 
 
 engine = create_engine(
-    DATABASE_URL
+    settings.DATABASE_URL
 )
 
 
@@ -34,6 +17,3 @@ SessionLocal = sessionmaker(
     autoflush=False,
     bind=engine
 )
-
-
-Base = declarative_base()
