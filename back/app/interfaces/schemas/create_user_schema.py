@@ -25,5 +25,6 @@ class CreateUserRequest(BaseModel):
     password: str
 
     numero_documento: str
+    document_type_id: str
 
     role_id: str

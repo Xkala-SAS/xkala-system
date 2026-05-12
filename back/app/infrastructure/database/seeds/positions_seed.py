@@ -15,13 +15,13 @@ def seed_positions(db: Session):
         },
 
         {
-            "nombre": "Gerente de Gestión Integral",
-            "descripcion": "Responsable del sistema de gestión integral"
+            "nombre": "Gerente de Gestion Integral",
+            "descripcion": "Responsable del sistema de gestion integral"
         },
 
         {
-            "nombre": "Asistente de Gestión Humana",
-            "descripcion": "Apoyo al área de gestión humana"
+            "nombre": "Asistente de Gestion Humana",
+            "descripcion": "Apoyo al área de gestion humana"
         },
 
         {
@@ -36,12 +36,12 @@ def seed_positions(db: Session):
 
         {
             "nombre": "Practicante Administrativo",
-            "descripcion": "Practicante del área administrativa"
+            "descripcion": "Practicante del area administrativa"
         },
 
         {
             "nombre": "Supervisor de Mantenimiento",
-            "descripcion": "Supervisión de mantenimiento"
+            "descripcion": "Supervision de mantenimiento"
         },
 
         {
@@ -60,6 +60,5 @@ def seed_positions(db: Session):
 
             db.add(PositionModel(**item))
 
-    db.commit()
 
     print("✅ Cargos insertados")

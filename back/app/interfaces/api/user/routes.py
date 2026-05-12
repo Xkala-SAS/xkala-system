@@ -3,7 +3,8 @@ from fastapi import (
     Depends,
     UploadFile,
     File,
-    Query
+    Query,
+    Request
 )
 
 from typing import Optional
@@ -40,6 +41,14 @@ from app.core.security.permission_dependency import (
     require_permission
 )
 
+from app.application.user.use_cases.update_user import (
+    UpdateUserUseCase
+)
+
+from app.core.dependencies.user_dependencies import (
+    get_update_user_use_case
+)
+
 from app.application.user.use_cases.create_user import (
     CreateUserUseCase
 )
@@ -70,7 +79,9 @@ from app.core.dependencies.user_dependencies import (
 
     get_upload_profile_service,
 
-    get_list_users_service
+    get_list_users_service,
+
+    get_user_document_repository
 )
 
 
@@ -93,11 +104,16 @@ def create_user(
 
     repository = Depends(
         get_user_repository
+    ),
+
+    user_document_repository = Depends(
+        get_user_document_repository
     )
 ):
 
     use_case = CreateUserUseCase(
-        repository
+        user_repository = repository,
+        user_document_repository = user_document_repository
     )
 
     user = use_case.execute(
@@ -117,6 +133,8 @@ def create_user(
         password=request.password,
 
         numero_documento=request.numero_documento,
+
+        document_type_id=request.document_type_id,
 
         role_id=request.role_id
     )
@@ -365,4 +383,57 @@ def list_users(
         message="Usuarios obtenidos",
 
         pagination=result["pagination"]
+    )
+
+@router.put("/{user_id}")
+def update_user(
+
+    user_id: str,
+
+    request: CreateUserRequest,
+
+    http_request: Request,
+
+    current_user = Depends(
+        get_current_user
+    ),
+
+    use_case: UpdateUserUseCase = Depends(
+        get_update_user_use_case
+    )
+):
+
+    result = use_case.execute(
+
+        user_id=user_id,
+
+        primer_nombre=request.primer_nombre,
+
+        segundo_nombre=request.segundo_nombre,
+
+        primer_apellido=request.primer_apellido,
+
+        segundo_apellido=request.segundo_apellido,
+
+        email=request.email,
+
+        estado=True,
+
+        role_id=request.role_id,
+
+        current_user_id=current_user.id,
+
+        ip_address=http_request.client.host
+    )
+
+    return success_response(
+
+        data={
+
+            "user_id":
+                result.id
+        },
+
+        message=
+            "Usuario actualizado correctamente"
     )

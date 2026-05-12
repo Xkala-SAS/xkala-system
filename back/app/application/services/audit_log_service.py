@@ -1,8 +1,3 @@
-from app.infrastructure.database.models.audit_log_model import (
-    AuditLogModel
-)
-
-
 class AuditLogService:
 
     def __init__(self, repository):
@@ -13,20 +8,32 @@ class AuditLogService:
 
         self,
 
-        user_id: str,
+        user_id=None,
 
-        action: str,
+        action=None,
 
-        resource: str,
+        resource=None,
 
-        method: str,
+        method=None,
 
-        endpoint: str,
+        endpoint=None,
 
-        ip_address: str
+        ip_address=None,
+
+        user_agent=None,
+
+        status_code=None,
+
+        description=None,
+
+        old_values=None,
+
+        new_values=None,
+
+        extra_data=None
     ):
 
-        audit_log = AuditLogModel(
+        return self.repository.save(
 
             user_id=user_id,
 
@@ -38,9 +45,17 @@ class AuditLogService:
 
             endpoint=endpoint,
 
-            ip_address=ip_address
-        )
+            ip_address=ip_address,
 
-        return self.repository.save(
-            audit_log
+            user_agent=user_agent,
+
+            status_code=status_code,
+
+            description=description,
+
+            old_values=old_values,
+
+            new_values=new_values,
+
+            extra_data=extra_data
         )

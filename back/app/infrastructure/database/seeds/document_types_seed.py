@@ -9,29 +9,45 @@ def seed_document_types(db: Session):
 
     document_types = [
 
-        {"codigo": "CC", "nombre": "Cédula de ciudadanía"},
+        {"codigo": "CC", "nombre": "Cedula de ciudadania"},
 
         {"codigo": "TI", "nombre": "Tarjeta de identidad"},
 
-        {"codigo": "CE", "nombre": "Cédula de extranjería"},
+        {"codigo": "CE", "nombre": "Cedula de extranjeria"},
 
         {"codigo": "PAS", "nombre": "Pasaporte"},
 
-        {"codigo": "NIT", "nombre": "Número de identificación tributaria"},
+        {"codigo": "NIT", "nombre": "Numero de identificacion tributaria"},
 
         {"codigo": "PEP", "nombre": "Permiso especial de permanencia"}
     ]
 
+    existing_codes = {
+
+        item.codigo
+
+        for item in db.query(DocumentTypeModel).all()
+    }
+
+    new_items = []
+
     for item in document_types:
 
-        exists = db.query(DocumentTypeModel).filter(
-            DocumentTypeModel.codigo == item["codigo"]
-        ).first()
+        if item["codigo"] not in existing_codes:
 
-        if not exists:
+            new_items.append(
+                DocumentTypeModel(**item)
+            )
 
-            db.add(DocumentTypeModel(**item))
+    if new_items:
 
-    db.commit()
+        db.add_all(new_items)
 
-    print("✅ Tipos de documento insertados")
+        print(
+            f"✅ {len(new_items)} tipos de documento insertados"
+        )
+
+    else:
+
+        print(
+            "ℹ️ Tipos de documento ya existentes")

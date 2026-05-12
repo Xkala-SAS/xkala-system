@@ -37,6 +37,21 @@ from app.application.user.use_cases.login_user import (
     LoginUserUseCase
 )
 
+from app.application.user.use_cases.update_user import (
+    UpdateUserUseCase
+)
+
+from app.application.services.audit_log_service import (
+    AuditLogService
+)
+
+from app.infrastructure.repositories.audit_log_repository_impl import (
+    AuditLogRepositoryImpl
+)
+from app.infrastructure.repositories.user_document_repository_impl import (
+    UserDocumentRepositoryImpl
+)
+
 
 # ==========================================
 # REPOSITORIES
@@ -47,6 +62,12 @@ def get_user_repository(
 ):
 
     return UserRepositoryImpl(db)
+
+def get_user_document_repository(
+    db: Session = Depends(get_db)
+):
+
+    return UserDocumentRepositoryImpl(db)
 
 
 def get_user_file_repository(
@@ -131,6 +152,30 @@ def get_login_use_case(
 ):
 
     return LoginUserUseCase(
+
+        repository,
+
+        audit_service
+    )
+
+def get_update_user_use_case(
+
+    repository = Depends(
+        get_user_repository
+    ),
+
+    db: Session = Depends(get_db)
+):
+
+    audit_repository = (
+        AuditLogRepositoryImpl(db)
+    )
+
+    audit_service = (
+        AuditLogService(audit_repository)
+    )
+
+    return UpdateUserUseCase(
 
         repository,
 

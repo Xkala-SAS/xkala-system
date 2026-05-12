@@ -1,37 +1,23 @@
 from sqlalchemy import (
     Column,
     String,
-    ForeignKey
+    Text,
+    ForeignKey,
+    Integer,
+    JSON
 )
+from app.infrastructure.database.base.base_class import Base
+from app.infrastructure.database.base.base_model import BaseModelMixin
 
-from sqlalchemy.orm import (
-    relationship
-)
+from sqlalchemy.orm import relationship
 
-from app.infrastructure.database.db import (
-    Base
-)
-
-from app.infrastructure.database.base.base_model import (
-    BaseModelMixin
-)
-
-
-class AuditLogModel(
-
-    Base,
-
-    BaseModelMixin
-):
+class AuditLogModel(Base, BaseModelMixin):
 
     __tablename__ = "audit_logs"
 
     user_id = Column(
-
         String(36),
-
         ForeignKey("users.id"),
-
         nullable=True
     )
 
@@ -60,6 +46,34 @@ class AuditLogModel(
         nullable=True
     )
 
-    user = relationship(
-        "UserModel"
+    user_agent = Column(
+        String(500),
+        nullable=True
     )
+
+    status_code = Column(
+        Integer,
+        nullable=True
+    )
+
+    description = Column(
+        Text,
+        nullable=True
+    )
+
+    old_values = Column(
+        JSON,
+        nullable=True
+    )
+
+    new_values = Column(
+        JSON,
+        nullable=True
+    )
+
+    extra_data = Column(
+        JSON,
+        nullable=True
+    )
+
+    user = relationship("UserModel")

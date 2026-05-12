@@ -60,3 +60,6 @@ from app.infrastructure.database.models.user_file_model import (
 from app.infrastructure.database.models.user_contact_model import (
     UserContactModel
 )
+from app.infrastructure.database.models.audit_log_model import (
+    AuditLogModel
+)

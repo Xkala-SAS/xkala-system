@@ -20,6 +20,14 @@ from app.infrastructure.database.models.user_contract_model import (
     UserContractModel
 )
 
+from app.core.utils.audit_changes import (
+    extract_changes
+)
+
+from app.infrastructure.database.models.audit_log_model import (
+    AuditLogModel
+)
+
 
 
 class UserRepositoryImpl(UserRepository):
@@ -38,7 +46,6 @@ class UserRepositoryImpl(UserRepository):
             fecha_nacimiento=user.fecha_nacimiento,
             email=user.email,
             password_hash=user.password_hash,
-            numero_documento=user.numero_documento,
             role_id=user.role_id,
             estado=user.estado,
             created_at=user.created_at
@@ -65,26 +72,29 @@ class UserRepositoryImpl(UserRepository):
         return self._to_domain(db_user)
 
     def get_by_document(
-        self,
-        numero_documento: str
-    ):
+    self,
+    numero_documento: str
+):
 
-        document = (
-            self.db.query(UserDocumentModel)
-            .filter(
-                UserDocumentModel.numero_documento ==
-                numero_documento
+        db_user = (
+        
+            self.db.query(UserModel)
+    
+            .join(
+                UserDocumentModel,
+                UserDocumentModel.user_id == UserModel.id
             )
+    
+            .filter(
+                UserDocumentModel.numero_documento == numero_documento,
+                UserModel.deleted_at == None
+            )
+    
             .first()
         )
     
-        if not document:
-            return None
-    
-        db_user = document.user
-    
         return self._to_domain(db_user)
-
+    
     def get_by_email(self, email: str):
 
             db_user = (
@@ -102,26 +112,52 @@ class UserRepositoryImpl(UserRepository):
     def update(self, user: User):
 
         db_user = (
+        
             self.db.query(UserModel)
-            .filter(UserModel.id == user.id)
+    
+            .filter(
+                UserModel.id == user.id
+            )
+    
             .first()
         )
-
+    
         if not db_user:
             return None
-
-        db_user.primer_nombre = user.primer_nombre
-        db_user.segundo_nombre = user.segundo_nombre
-        db_user.primer_apellido = user.primer_apellido
-        db_user.segundo_apellido = user.segundo_apellido
-        db_user.email = user.email
-        db_user.estado = user.estado
-        db_user.role_id = user.role_id
-
+    
+        db_user.primer_nombre = (
+            user.primer_nombre
+        )
+    
+        db_user.segundo_nombre = (
+            user.segundo_nombre
+        )
+    
+        db_user.primer_apellido = (
+            user.primer_apellido
+        )
+    
+        db_user.segundo_apellido = (
+            user.segundo_apellido
+        )
+    
+        db_user.email = (
+            user.email
+        )
+    
+        db_user.estado = (
+            user.estado
+        )
+    
+        db_user.role_id = (
+            user.role_id
+        )
+    
         self.db.commit()
+    
         self.db.refresh(db_user)
-
-        return user
+    
+        return self._to_domain(db_user)
 
     def delete(self, user_id: str):
 
@@ -155,12 +191,11 @@ class UserRepositoryImpl(UserRepository):
             fecha_nacimiento=db_user.fecha_nacimiento,
             email=db_user.email,
             password_hash=db_user.password_hash,
-            numero_documento=db_user.numero_documento,
             role_id=db_user.role_id,
             estado=db_user.estado,
             created_at=db_user.created_at
         )
-    
+
     def get_profile_data(self, user_id: str):
 
         return (

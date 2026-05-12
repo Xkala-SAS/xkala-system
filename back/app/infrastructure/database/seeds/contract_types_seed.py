@@ -9,8 +9,8 @@ def seed_contract_types(db: Session):
 
     contract_types = [
 
-        "Término indefinido",
-        "Término fijo",
+        "Termino indefinido",
+        "Termino fijo",
         "Obra o labor",
         "Prestación de servicios",
         "Aprendizaje"

@@ -75,20 +75,42 @@ class LoginUserUseCase:
 
             raise InactiveUserException()
 
-        self.audit_service.execute(
+        # ======================================
+        # AUDITORÍA SEGURA
+        # ======================================
 
-            user_id=user.id,
+        try:
 
-            action="LOGIN",
+            self.audit_service.execute(
 
-            resource="AUTH",
+                user_id=user.id,
 
-            method="POST",
+                action="LOGIN",
 
-            endpoint="/users/login",
+                resource="AUTH",
 
-            ip_address="127.0.0.1"
-        )
+                method="POST",
+
+                endpoint="/users/login",
+
+                ip_address="127.0.0.1",
+
+                status_code=200,
+
+                description="Inicio de sesión exitoso",
+
+                extra_data={
+
+                    "numero_documento":
+                        numero_documento
+                }
+            )
+
+        except Exception as e:
+
+            logger.error(
+                f"Error registrando auditoría: {e}"
+            )
 
         logger.info(
             f"Login exitoso usuario: "

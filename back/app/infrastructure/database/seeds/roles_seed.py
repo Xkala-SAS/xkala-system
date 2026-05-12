@@ -16,22 +16,22 @@ def seed_roles(db: Session):
 
         {
             "nombre": "Gerencia",
-            "descripcion": "Acceso gerencial y estratégico"
+            "descripcion": "Acceso gerencial y estrategico"
         },
 
         {
             "nombre": "Gestion Humana",
-            "descripcion": "Gestión de empleados y RRHH"
+            "descripcion": "Gestion de empleados y RRHH"
         },
 
         {
             "nombre": "Supervisor",
-            "descripcion": "Supervisión operativa"
+            "descripcion": "Supervision operativa"
         },
 
         {
             "nombre": "Empleado",
-            "descripcion": "Acceso básico del empleado"
+            "descripcion": "Acceso basico del empleado"
         },
 
         {
@@ -45,18 +45,33 @@ def seed_roles(db: Session):
         }
     ]
 
+    existing_roles = {
+
+        role.nombre
+
+        for role in db.query(RoleModel).all()
+    }
+
+    new_roles = []
+
     for item in roles:
 
-        exists = db.query(RoleModel).filter(
-            RoleModel.nombre == item["nombre"]
-        ).first()
+        if item["nombre"] not in existing_roles:
 
-        if not exists:
-
-            db.add(
+            new_roles.append(
                 RoleModel(**item)
             )
 
-    db.commit()
+    if new_roles:
 
-    print("✅ Roles insertados")
+        db.add_all(new_roles)
+
+        print(
+            f"✅ {len(new_roles)} roles insertados"
+        )
+
+    else:
+
+        print(
+            "ℹ️ Roles ya existentes"
+        )

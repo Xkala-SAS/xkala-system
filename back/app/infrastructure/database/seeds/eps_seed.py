@@ -29,6 +29,5 @@ def seed_eps(db: Session):
 
             db.add(EPSModel(nombre=nombre))
 
-    db.commit()
 
     print("✅ EPS insertadas")

@@ -25,6 +25,5 @@ def seed_severance_funds(db: Session):
 
             db.add(SeveranceFundModel(nombre=nombre))
 
-    db.commit()
 
     print("✅ Fondos de cesantías insertados")

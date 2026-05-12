@@ -1,4 +1,6 @@
-from app.infrastructure.database.db import SessionLocal
+from app.infrastructure.database.db import (
+    SessionLocal
+)
 
 from app.infrastructure.database.seeds.roles_seed import (
     seed_roles
@@ -43,6 +45,8 @@ def run():
 
     try:
 
+        print("🌱 Ejecutando seeders...")
+
         seed_roles(db)
 
         seed_document_types(db)
@@ -61,10 +65,25 @@ def run():
 
         seed_cities(db)
 
+        db.commit()
+
+        print("✅ Seeders ejecutados correctamente")
+
+    except Exception as e:
+
+        db.rollback()
+
+        print(
+            f"❌ Error ejecutando seeders: {e}"
+        )
+
+        raise e
+
     finally:
 
         db.close()
 
 
 if __name__ == "__main__":
+
     run()

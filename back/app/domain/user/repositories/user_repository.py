@@ -55,3 +55,10 @@ class UserRepository(ABC):
     @abstractmethod
     def count_users(self):
         pass
+
+    @abstractmethod
+    def get_by_document(
+        self,
+        numero_documento: str
+    ):
+        pass

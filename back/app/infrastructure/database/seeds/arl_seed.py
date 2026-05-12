@@ -12,7 +12,7 @@ def seed_arl(db: Session):
         "SURA",
         "Positiva",
         "Colmena",
-        "Bolívar",
+        "Bolivar",
         "AXA Colpatria"
     ]
 

@@ -2,7 +2,6 @@ from app.core.exceptions.base_exception import (
     AppException
 )
 
-
 class InvalidEmailException(AppException):
 
     def __init__(self):
@@ -47,6 +46,17 @@ class MissingDocumentException(AppException):
         )
 
 
+class MissingDocumentTypeException(AppException):
+
+    def __init__(self):
+
+        super().__init__(
+            message="El tipo de documento es obligatorio",
+            status_code=400,
+            error_code="MISSING_DOCUMENT_TYPE"
+        )
+
+
 class MissingPasswordException(AppException):
 
     def __init__(self):
@@ -77,4 +87,15 @@ class UserAlreadyExistsException(AppException):
             message="El email ya está registrado",
             status_code=409,
             error_code="USER_ALREADY_EXISTS"
+        )
+
+
+class DocumentAlreadyExistsException(AppException):
+
+    def __init__(self):
+
+        super().__init__(
+            message="El número de documento ya está registrado",
+            status_code=409,
+            error_code="DOCUMENT_ALREADY_EXISTS"
         )

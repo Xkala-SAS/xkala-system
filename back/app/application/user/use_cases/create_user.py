@@ -1,15 +1,32 @@
 from app.domain.user.entities.user import User
-from app.domain.user.repositories.user_repository import UserRepository
-from app.core.security.password_hasher import PasswordHasher
+
+from app.domain.user.entities.user_document import (
+    UserDocument
+)
+
+from app.core.security.password_hasher import (
+    PasswordHasher
+)
+
 from app.domain.user.exceptions.user_validation_exceptions import (
-    UserAlreadyExistsException
+    UserAlreadyExistsException,
+    DocumentAlreadyExistsException
 )
 
 
 class CreateUserUseCase:
 
-    def __init__(self, user_repository: UserRepository):
+    def __init__(
+        self,
+        user_repository,
+        user_document_repository
+    ):
+
         self.user_repository = user_repository
+
+        self.user_document_repository = (
+            user_document_repository
+        )
 
     def execute(
         self,
@@ -21,27 +38,32 @@ class CreateUserUseCase:
         email: str,
         password: str,
         numero_documento: str,
+        document_type_id: str,
         role_id: str
-    ) -> User:
-        
-       
+    ):
 
-        # 🔍 1. Validar si ya existe por documento (LOGIN)
-        existing_user = self.user_repository.get_by_document(numero_documento)
+        existing_user = (
+            self.user_repository.get_by_email(email)
+        )
 
         if existing_user:
-            raise ValueError("El usuario ya existe con ese documento")
 
-        # 🔍 2. Validar email único (opcional pero recomendado)
-        existing_email = self.user_repository.get_by_email(email)
-
-        if existing_email:
             raise UserAlreadyExistsException()
-        
-        # hashear contraseña
-        hashed_password = PasswordHasher.hash(password)
 
-        # 🧠 3. Crear entidad (dominio)
+        existing_document = (
+            self.user_repository.get_by_document(
+                numero_documento
+            )
+        )
+
+        if existing_document:
+
+            raise DocumentAlreadyExistsException()
+
+        password_hash = PasswordHasher.hash(
+            password
+        )
+
         user = User(
             primer_nombre=primer_nombre,
             segundo_nombre=segundo_nombre,
@@ -49,10 +71,22 @@ class CreateUserUseCase:
             segundo_apellido=segundo_apellido,
             fecha_nacimiento=fecha_nacimiento,
             email=email,
-            password_hash=hashed_password,
-            numero_documento=numero_documento,
+            password_hash=password_hash,
             role_id=role_id
         )
 
-        # 💾 4. Guardar
-        return self.user_repository.save(user)
+        saved_user = (
+            self.user_repository.save(user)
+        )
+
+        user_document = UserDocument(
+            user_id=saved_user.id,
+            numero_documento=numero_documento,
+            document_type_id=document_type_id
+        )
+
+        self.user_document_repository.save(
+            user_document
+        )
+
+        return saved_user

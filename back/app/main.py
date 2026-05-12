@@ -46,6 +46,10 @@ from app.interfaces.api.hr.routes import (
     router as hr_router
 )
 
+from app.core.middleware.audit_middleware import (
+    AuditMiddleware
+)
+
 # ==========================================
 # CREATE UPLOADS DIRECTORY
 # ==========================================
@@ -89,6 +93,8 @@ app.add_middleware(
     RequestLoggingMiddleware
 )
 
+app.add_middleware(AuditMiddleware)
+
 # ==========================================
 # STATIC FILES
 # ==========================================
@@ -128,36 +134,4 @@ def root():
 
     return {
         "message": "Xkala System API"
-    }
-
-# ==========================================
-# HEALTH CHECK
-# ==========================================
-
-@app.get("/health")
-def health_check():
-
-    database_status = "ok"
-
-    try:
-
-        with engine.connect() as connection:
-
-            connection.execute(
-                text("SELECT 1")
-            )
-
-    except Exception:
-
-        database_status = "error"
-
-    return {
-
-        "app": settings.APP_NAME,
-
-        "environment": settings.APP_ENV,
-
-        "status": "running",
-
-        "database": database_status
     }

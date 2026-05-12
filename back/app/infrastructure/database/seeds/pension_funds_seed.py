@@ -26,6 +26,5 @@ def seed_pension_funds(db: Session):
 
             db.add(PensionFundModel(nombre=nombre))
 
-    db.commit()
 
     print("✅ Fondos de pensión insertados")

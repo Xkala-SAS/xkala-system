@@ -15,34 +15,60 @@ def seed_cities(db: Session):
         "app/shared/data/colombia/cities.json"
     )
 
-    with open(file_path, "r", encoding="utf-8") as file:
+    with open(
+        file_path,
+        "r",
+        encoding="utf-8"
+    ) as file:
 
         departments = json.load(file)
 
-    total_inserted = 0
+    existing_cities = {
+
+        (
+            city.nombre,
+            city.departamento
+        )
+
+        for city in db.query(CityModel).all()
+    }
+
+    new_cities = []
 
     for department in departments:
 
-        department_name = department["departamento"]
+        department_name = (
+            department["departamento"]
+        )
 
         for city_name in department["ciudades"]:
 
-            exists = db.query(CityModel).filter(
-                CityModel.nombre == city_name,
-                CityModel.departamento == department_name
-            ).first()
+            key = (
+                city_name,
+                department_name
+            )
 
-            if not exists:
+            if key not in existing_cities:
 
-                city = CityModel(
-                    nombre=city_name,
-                    departamento=department_name
+                new_cities.append(
+
+                    CityModel(
+
+                        nombre=city_name,
+
+                        departamento=department_name
+                    )
                 )
 
-                db.add(city)
+    if new_cities:
 
-                total_inserted += 1
+        db.add_all(new_cities)
 
-    db.commit()
+        print(
+            f"✅ {len(new_cities)} ciudades insertadas"
+        )
 
-    print(f"✅ {total_inserted} ciudades insertadas")
+    else:
+
+        print(
+            "ℹ️ Ciudades ya existentes")

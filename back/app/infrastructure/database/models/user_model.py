@@ -19,7 +19,6 @@ class UserModel(
     segundo_nombre = Column(String(100), nullable=True)
     primer_apellido = Column(String(100), nullable=False)
     segundo_apellido = Column(String(100), nullable=True)
-    numero_documento = Column(String(50), unique=True, nullable=False)
     fecha_nacimiento = Column(DateTime, nullable=False)
     email = Column(String(100), unique=True, nullable=False)
     password_hash = Column(String(255), nullable=False)
