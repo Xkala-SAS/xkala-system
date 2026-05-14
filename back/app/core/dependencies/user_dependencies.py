@@ -60,6 +60,14 @@ from app.application.services.upload_document_service import (
     UploadDocumentService
 )
 
+from app.application.services.list_user_documents_service import (
+    ListUserDocumentsService
+)
+
+from app.application.services.delete_user_document_service import (
+    DeleteUserDocumentService
+)
+
 
 # ==========================================
 # REPOSITORIES
@@ -147,6 +155,28 @@ def get_upload_document_service(
 ):
 
     return UploadDocumentService(
+        repository
+    )
+
+def get_list_user_documents_service(
+
+    repository = Depends(
+        get_user_file_repository
+    )
+):
+
+    return ListUserDocumentsService(
+        repository
+    )
+
+def get_delete_user_document_service(
+
+    repository = Depends(
+        get_user_file_repository
+    )
+):
+
+    return DeleteUserDocumentService(
         repository
     )
 

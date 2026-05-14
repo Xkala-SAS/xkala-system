@@ -79,6 +79,12 @@ from app.application.services.upload_signature_service import (
 from app.application.services.upload_document_service import (
     UploadDocumentService
 )
+from app.application.services.list_user_documents_service import (
+    ListUserDocumentsService
+)
+from app.application.services.delete_user_document_service import (
+    DeleteUserDocumentService
+)
 
 from app.domain.user.enums.user_file_type import (
     UserFileType
@@ -100,7 +106,11 @@ from app.core.dependencies.user_dependencies import (
 
     get_upload_signature_service,
 
-    get_upload_document_service
+    get_upload_document_service,
+
+    get_list_user_documents_service,
+
+    get_delete_user_document_service
 )
 
 
@@ -413,6 +423,66 @@ def upload_document(
 
         message=
             "Documento subido correctamente"
+    )
+
+# ==========================================
+# MY DOCUMENTS
+# ==========================================
+
+@router.get("/my-documents")
+def my_documents(
+
+    current_user = Depends(
+        get_current_user
+    ),
+
+    service: ListUserDocumentsService = Depends(
+        get_list_user_documents_service
+    )
+):
+
+    result = service.execute(
+        current_user.id
+    )
+
+    return success_response(
+
+        data=result,
+
+        message="Documentos obtenidos correctamente"
+    )
+
+# ==========================================
+# DELETE DOCUMENT
+# ==========================================
+
+@router.delete("/document/{document_id}")
+def delete_document(
+
+    document_id: str,
+
+    current_user = Depends(
+        get_current_user
+    ),
+
+    service: DeleteUserDocumentService = Depends(
+        get_delete_user_document_service
+    )
+):
+
+    result = service.execute(
+
+        document_id,
+
+        current_user
+    )
+
+    return success_response(
+
+        data=result,
+
+        message=
+            "Documento eliminado correctamente"
     )
 
 # ==========================================

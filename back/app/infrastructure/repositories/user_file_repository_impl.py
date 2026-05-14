@@ -87,3 +87,38 @@ class UserFileRepositoryImpl(
         self.db.refresh(user_file)
 
         return user_file
+    
+    def get_user_files(self, user_id):
+
+        return (
+        
+            self.db
+            .query(UserFileModel)
+            .filter(
+            
+                UserFileModel.user_id == user_id,
+    
+                UserFileModel.is_active == True
+            )
+            .order_by(
+                UserFileModel.uploaded_at.desc()
+            )
+            .all()
+        )
+    
+    def get_by_id(self, document_id):
+
+        return (
+        
+            self.db
+            .query(UserFileModel)
+            .filter(
+                UserFileModel.id == document_id
+            )
+            .first()
+        )
+    
+    
+    def commit(self):
+    
+        self.db.commit()
