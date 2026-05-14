@@ -37,6 +37,16 @@ from app.infrastructure.database.seeds.positions_seed import (
 from app.infrastructure.database.seeds.cities_seed import (
     seed_cities
 )
+from app.infrastructure.database.seeds.permission_seed import (
+    seed_permissions
+)
+
+from app.infrastructure.database.seeds.role_permission_seed import (
+    seed_role_permissions
+)
+from app.infrastructure.database.seeds.super_admin_seed import (
+    seed_super_admin
+)
 
 
 def run():
@@ -48,25 +58,40 @@ def run():
         print("🌱 Ejecutando seeders...")
 
         seed_roles(db)
-
+        db.commit()
+        
+        seed_permissions(db)
+        db.commit()
+        
+        seed_role_permissions(db)
+        db.commit()
+        
         seed_document_types(db)
-
-        seed_eps(db)
-
-        seed_arl(db)
-
-        seed_contract_types(db)
-
-        seed_pension_funds(db)
-
-        seed_severance_funds(db)
-
-        seed_positions(db)
-
-        seed_cities(db)
-
         db.commit()
 
+        seed_super_admin(db)
+        db.commit()
+        
+        seed_eps(db)
+        db.commit()
+        
+        seed_arl(db)
+        db.commit()
+        
+        seed_contract_types(db)
+        db.commit()
+        
+        seed_pension_funds(db)
+        db.commit()
+        
+        seed_severance_funds(db)
+        db.commit()
+        
+        seed_positions(db)
+        db.commit()
+        
+        seed_cities(db)
+        db.commit()
         print("✅ Seeders ejecutados correctamente")
 
     except Exception as e:

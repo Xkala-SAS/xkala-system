@@ -131,6 +131,10 @@ def create_user(
 
     request: CreateUserRequest,
 
+    current_user = Depends(
+        require_permission("create_user")
+    ),
+
     repository = Depends(
         get_user_repository
     ),
@@ -141,8 +145,10 @@ def create_user(
 ):
 
     use_case = CreateUserUseCase(
-        user_repository = repository,
-        user_document_repository = user_document_repository
+
+        user_repository=repository,
+
+        user_document_repository=user_document_repository
     )
 
     user = use_case.execute(
@@ -171,12 +177,10 @@ def create_user(
     return success_response(
 
         data={
-
             "user_id": user.id
         },
 
-        message=
-            "Usuario creado correctamente"
+        message="Usuario creado correctamente"
     )
 
 
@@ -495,6 +499,10 @@ def delete_document(
 )
 def list_users(
 
+    current_user = Depends(
+        require_permission("view_users")
+    ),
+
     page: int = Query(
         1,
         ge=1
@@ -543,6 +551,10 @@ def list_users(
         pagination=result["pagination"]
     )
 
+# ==========================================
+# UPDATE USER
+# ==========================================
+
 @router.put("/{user_id}")
 def update_user(
 
@@ -553,7 +565,7 @@ def update_user(
     http_request: Request,
 
     current_user = Depends(
-        get_current_user
+        require_permission("update_user")
     ),
 
     use_case: UpdateUserUseCase = Depends(
@@ -587,11 +599,8 @@ def update_user(
     return success_response(
 
         data={
-
-            "user_id":
-                result.id
+            "user_id": result.id
         },
 
-        message=
-            "Usuario actualizado correctamente"
+        message="Usuario actualizado correctamente"
     )

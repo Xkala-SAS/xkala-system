@@ -1,41 +1,85 @@
+# =========================
 # Python
+# =========================
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
+*$py.class
 
-# Entorno virtual
+# =========================
+# Virtual Environments
+# =========================
 venv/
+.venv/
+env/
+
+# =========================
+# Environment Variables
+# =========================
 .env
+.env.dev
+.env.prod
 
+# =========================
 # Uploads
-uploads/
+# =========================
+back/uploads/
 
+# =========================
 # Alembic
+# =========================
+alembic/__pycache__/
 alembic/versions/__pycache__/
 
+# =========================
 # Logs
+# =========================
 *.log
 
-# VSCode
+# =========================
+# IDE
+# =========================
 .vscode/
+.idea/
 
-# Linux
+# =========================
+# OS
+# =========================
 .DS_Store
 Thumbs.db
 
-# Pytest
+# =========================
+# Testing
+# =========================
 .pytest_cache/
-
-# MySQL
-mysql_data/
-
-# Docker
-*.pid
-
-# Coverage
 htmlcov/
 .coverage
 
+# =========================
 # Cache
+# =========================
 .cache/
+.mypy_cache/
+
+# =========================
+# Docker
+# =========================
+*.pid
+
+# =========================
+# MySQL / Docker Volumes
+# =========================
+mysql_data/
+
+# =========================
+# Frontend (Angular)
+# =========================
+node_modules/
+dist/
+.angular/
+
+# =========================
+# Build / Temporary
+# =========================
+build/
+tmp/
+temp/
