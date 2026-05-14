@@ -25,6 +25,10 @@ from app.interfaces.schemas.user_profile_schema import (
     UserProfileResponse
 )
 
+from app.interfaces.schemas.update_user_schema import (
+    UpdateUserRequest
+)
+
 from app.interfaces.schemas.user_list_schema import (
     UserListResponseSchema
 )
@@ -68,6 +72,17 @@ from app.application.services.upload_profile_photo_service import (
 from app.application.services.list_user_service import (
     ListUsersService
 )
+from app.application.services.upload_signature_service import (
+    UploadSignatureService
+)
+
+from app.application.services.upload_document_service import (
+    UploadDocumentService
+)
+
+from app.domain.user.enums.user_file_type import (
+    UserFileType
+)
 
 from app.core.dependencies.user_dependencies import (
 
@@ -81,7 +96,11 @@ from app.core.dependencies.user_dependencies import (
 
     get_list_users_service,
 
-    get_user_document_repository
+    get_user_document_repository,
+
+    get_upload_signature_service,
+
+    get_upload_document_service
 )
 
 
@@ -328,6 +347,75 @@ def upload_profile_photo(
 
 
 # ==========================================
+# UPLOAD SIGNATURE
+# ==========================================
+
+@router.post("/upload/signature")
+def upload_signature(
+
+    file: UploadFile = File(...),
+
+    current_user = Depends(
+        get_current_user
+    ),
+
+    service: UploadSignatureService = Depends(
+        get_upload_signature_service
+    )
+):
+
+    result = service.execute(
+        file,
+        current_user
+    )
+
+    return success_response(
+
+        data=result,
+
+        message=
+            "Firma subida correctamente"
+    )
+
+
+# ==========================================
+# UPLOAD DOCUMENT
+# ==========================================
+
+@router.post("/upload/document")
+def upload_document(
+
+    document_type: UserFileType,
+
+    file: UploadFile = File(...),
+
+    current_user = Depends(
+        get_current_user
+    ),
+
+    service: UploadDocumentService = Depends(
+        get_upload_document_service
+    )
+):
+
+    result = service.execute(
+
+        file=file,
+
+        document_type=document_type,
+
+        current_user=current_user
+    )
+
+    return success_response(
+
+        data=result,
+
+        message=
+            "Documento subido correctamente"
+    )
+
+# ==========================================
 # LIST USERS
 # ==========================================
 
@@ -390,7 +478,7 @@ def update_user(
 
     user_id: str,
 
-    request: CreateUserRequest,
+    request: UpdateUserRequest,
 
     http_request: Request,
 
@@ -417,7 +505,7 @@ def update_user(
 
         email=request.email,
 
-        estado=True,
+        estado=request.estado,
 
         role_id=request.role_id,
 

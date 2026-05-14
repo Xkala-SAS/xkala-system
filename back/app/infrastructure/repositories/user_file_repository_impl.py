@@ -14,17 +14,25 @@ class UserFileRepositoryImpl(
 ):
 
     def __init__(
+
         self,
+
         db: Session
     ):
 
         self.db = db
 
-    def get_primary_profile_photos(
+    # ==================================
+    # OBTENER ARCHIVOS POR TIPO
+    # ==================================
+
+    def get_files_by_type(
 
         self,
 
-        user_id: str
+        user_id: str,
+
+        file_type: str
     ):
 
         return (
@@ -35,14 +43,35 @@ class UserFileRepositoryImpl(
 
                 UserFileModel.user_id == user_id,
 
-                UserFileModel.file_type ==
-                "profile_photo",
+                UserFileModel.file_type == file_type,
 
                 UserFileModel.is_primary == True
             )
 
             .all()
         )
+
+    # ==================================
+    # FOTOS PRINCIPALES
+    # ==================================
+
+    def get_primary_profile_photos(
+
+        self,
+
+        user_id: str
+    ):
+
+        return self.get_files_by_type(
+
+            user_id,
+
+            "profile_photo"
+        )
+
+    # ==================================
+    # GUARDAR ARCHIVO
+    # ==================================
 
     def save_user_file(
 

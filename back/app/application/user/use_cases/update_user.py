@@ -85,29 +85,27 @@ class UpdateUserUseCase:
         # =====================================
 
         updated_user = User(
-
+                
             id=existing_user.id,
-
+        
             primer_nombre=primer_nombre,
-
+        
             segundo_nombre=segundo_nombre,
-
+        
             primer_apellido=primer_apellido,
-
+        
             segundo_apellido=segundo_apellido,
-
+        
             fecha_nacimiento=existing_user.fecha_nacimiento,
-
+        
             email=email,
-
+        
             password_hash=existing_user.password_hash,
-
-            numero_documento=existing_user.numero_documento,
-
+        
             role_id=role_id,
-
+        
             estado=estado,
-
+        
             created_at=existing_user.created_at
         )
 

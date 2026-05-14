@@ -1,3 +1,5 @@
+import os
+
 import uuid
 
 import shutil
@@ -10,19 +12,35 @@ def save_file(
     folder: str
 ):
 
+    # extensión
     extension = (
-        file.filename.split(".")[-1]
+        file.filename
+        .split(".")[-1]
         .lower()
     )
 
+    # nombre único
     filename = (
         f"{uuid.uuid4()}.{extension}"
     )
 
-    file_path = (
-        f"uploads/{folder}/{filename}"
+    # carpeta física
+    upload_dir = (
+        f"uploads/{folder}"
     )
 
+    # crear carpetas si no existen
+    os.makedirs(
+        upload_dir,
+        exist_ok=True
+    )
+
+    # ruta física
+    file_path = (
+        f"{upload_dir}/{filename}"
+    )
+
+    # guardar archivo
     with open(file_path, "wb") as buffer:
 
         shutil.copyfileobj(
@@ -30,4 +48,7 @@ def save_file(
             buffer
         )
 
-    return f"/uploads/{folder}/{filename}"
+    # url pública
+    return (
+        f"/uploads/{folder}/{filename}"
+    )

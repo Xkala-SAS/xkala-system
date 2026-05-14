@@ -82,6 +82,63 @@ class Settings(BaseSettings):
 
 
     # ======================================
+    # PROFILE FILES
+    # ======================================
+
+    PROFILE_ALLOWED_EXTENSIONS: list[str] = [
+        "jpg",
+        "jpeg",
+        "png",
+        "webp"
+    ]
+
+    PROFILE_ALLOWED_MIME_TYPES: list[str] = [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+    ]
+
+    PROFILE_MAX_SIZE_MB: int = 5
+
+
+    # ======================================
+    # SIGNATURE FILES
+    # ======================================
+
+    SIGNATURE_ALLOWED_EXTENSIONS: list[str] = [
+        "jpg",
+        "jpeg",
+        "png"
+    ]
+
+    SIGNATURE_ALLOWED_MIME_TYPES: list[str] = [
+        "image/jpeg",
+        "image/png"
+    ]
+
+    SIGNATURE_MAX_SIZE_MB: int = 3
+
+    # ======================================
+    # DOCUMENT FILES
+    # ======================================
+    
+    DOCUMENT_ALLOWED_EXTENSIONS: list[str] = [
+        "pdf",
+        "jpg",
+        "jpeg",
+        "png"
+    ]
+    
+    DOCUMENT_ALLOWED_MIME_TYPES: list[str] = [
+        "application/pdf",
+        "image/jpeg",
+        "image/png"
+    ]
+    
+    DOCUMENT_MAX_SIZE_MB: int = 10
+
+
+    # ======================================
     # DATABASE URL
     # ======================================
 

@@ -52,6 +52,14 @@ from app.infrastructure.repositories.user_document_repository_impl import (
     UserDocumentRepositoryImpl
 )
 
+from app.application.services.upload_signature_service import (
+    UploadSignatureService
+)
+
+from app.application.services.upload_document_service import (
+    UploadDocumentService
+)
+
 
 # ==========================================
 # REPOSITORIES
@@ -69,13 +77,11 @@ def get_user_document_repository(
 
     return UserDocumentRepositoryImpl(db)
 
-
 def get_user_file_repository(
     db: Session = Depends(get_db)
 ):
 
     return UserFileRepositoryImpl(db)
-
 
 def get_audit_repository(
     db: Session = Depends(get_db)
@@ -111,7 +117,6 @@ def get_profile_service(
         repository
     )
 
-
 def get_upload_profile_service(
 
     repository = Depends(
@@ -123,6 +128,27 @@ def get_upload_profile_service(
         repository
     )
 
+def get_upload_signature_service(
+
+    repository = Depends(
+        get_user_file_repository
+    )
+):
+
+    return UploadSignatureService(
+        repository
+    )
+
+def get_upload_document_service(
+
+    repository = Depends(
+        get_user_file_repository
+    )
+):
+
+    return UploadDocumentService(
+        repository
+    )
 
 def get_list_users_service(
 
