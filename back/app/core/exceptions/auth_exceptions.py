@@ -1,28 +1,31 @@
+from app.core.exceptions.base_exception import AppException
+
+
 class InvalidCredentialsException(
-    Exception
+    AppException
 ):
 
     def __init__(self):
 
-        self.message = (
-            "Credenciales inválidas"
-        )
-
         super().__init__(
-            self.message
+            message="Credenciales inválidas",
+
+            status_code=401,
+
+            error_code="INVALID_CREDENTIALS"
         )
 
 
 class InactiveUserException(
-    Exception
+    AppException
 ):
 
     def __init__(self):
 
-        self.message = (
-            "Usuario inactivo"
-        )
-
         super().__init__(
-            self.message
+            message="Usuario inactivo",
+
+            status_code=403,
+
+            error_code="INACTIVE_USER"
         )

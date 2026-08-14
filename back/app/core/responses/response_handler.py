@@ -1,33 +1,34 @@
+from typing import Any
+
+
 def success_response(
 
-    data=None,
+    data: Any = None,
 
-    message="Operación exitosa",
+    message: str = "Operación exitosa",
 
-    pagination=None
+    pagination: dict | None = None
 ):
 
-    response = {
+    return {
 
         "success": True,
 
         "message": message,
 
-        "data": data
+        "data": data,
+
+        "pagination": pagination,
+
+        "errors": None
     }
-
-    if pagination:
-
-        response["pagination"] = (
-            pagination
-        )
-
-    return response
 
 
 def error_response(
 
-    error: str,
+    message: str,
+
+    errors=None,
 
     status_code: int = 400
 ):
@@ -36,5 +37,11 @@ def error_response(
 
         "success": False,
 
-        "error": error
+        "message": message,
+
+        "data": None,
+
+        "pagination": None,
+
+        "errors": errors
     }
