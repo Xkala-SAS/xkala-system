@@ -72,3 +72,24 @@ class AuditLogRepositoryImpl:
         self.db.refresh(audit)
 
         return audit
+
+    # ==========================================
+    # GET USER AUDIT LOGS
+    # ==========================================
+
+    def get_by_user_id(self, user_id):
+
+        return (
+
+            self.db.query(AuditLogModel)
+
+            .filter(
+                AuditLogModel.user_id == user_id
+            )
+
+            .order_by(
+                AuditLogModel.created_at.desc()
+            )
+
+            .all()
+        )
