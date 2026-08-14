@@ -1,6 +1,5 @@
 from fastapi import (
     Depends,
-    HTTPException,
     Request
 )
 
@@ -27,7 +26,6 @@ from app.core.exceptions.base_exception import (
     AppException
 )
 
-
 security = HTTPBearer()
 
 
@@ -47,6 +45,25 @@ def get_current_user(
     payload = JWTHandler.decode_token(
         token
     )
+
+    # ======================================
+    # VALIDATE TOKEN TYPE
+    # ======================================
+
+    token_type = payload.get(
+        "token_type"
+    )
+
+    if token_type != "access":
+
+        raise AppException(
+
+            message="Token inválido",
+
+            status_code=401,
+
+            error_code="INVALID_TOKEN_TYPE"
+        )
 
     user_id = payload.get("sub")
 
@@ -76,6 +93,21 @@ def get_current_user(
             status_code=401,
 
             error_code="USER_NOT_FOUND"
+        )
+
+    # ======================================
+    # VALIDATE ACTIVE USER
+    # ======================================
+
+    if not user.estado:
+
+        raise AppException(
+
+            message="Usuario inactivo",
+
+            status_code=403,
+
+            error_code="USER_INACTIVE"
         )
 
     # ======================================

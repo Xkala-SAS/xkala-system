@@ -21,6 +21,10 @@ from app.core.exceptions.base_exception import (
 
 class JWTHandler:
 
+    # ==========================================
+    # CREATE ACCESS TOKEN
+    # ==========================================
+
     @staticmethod
     def create_access_token(
         data: dict
@@ -31,6 +35,7 @@ class JWTHandler:
         )
 
         expire = now + timedelta(
+
             minutes=(
                 settings
                 .ACCESS_TOKEN_EXPIRE_MINUTES
@@ -60,6 +65,55 @@ class JWTHandler:
         )
 
         return token
+
+    # ==========================================
+    # CREATE REFRESH TOKEN
+    # ==========================================
+
+    @staticmethod
+    def create_refresh_token(
+        data: dict
+    ) -> str:
+
+        now = datetime.now(
+            timezone.utc
+        )
+
+        expire = now + timedelta(
+
+            days=(
+                settings
+                .REFRESH_TOKEN_EXPIRE_DAYS
+            )
+        )
+
+        to_encode = data.copy()
+
+        to_encode.update({
+
+            "iat": now,
+
+            "exp": expire,
+
+            "jti": str(uuid4()),
+
+            "token_type": "refresh"
+        })
+
+        token = jwt.encode(
+
+            to_encode,
+
+            settings.SECRET_KEY,
+
+            algorithm=settings.ALGORITHM
+        )
+
+        return token
+
+    # ==========================================
+    # DECODE TOKEN
+    # ==========================================
 
     @staticmethod
     def decode_token(
@@ -101,4 +155,31 @@ class JWTHandler:
                 status_code=401,
 
                 error_code="INVALID_TOKEN"
+            )
+
+    # ==========================================
+    # VERIFY TOKEN TYPE
+    # ==========================================
+
+    @staticmethod
+    def verify_token_type(
+
+        payload: dict,
+
+        expected_type: str
+    ):
+
+        token_type = payload.get(
+            "token_type"
+        )
+
+        if token_type != expected_type:
+
+            raise AppException(
+
+                message="Tipo de token inválido",
+
+                status_code=401,
+
+                error_code="INVALID_TOKEN_TYPE"
             )
