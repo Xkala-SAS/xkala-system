@@ -11,6 +11,14 @@ from app.infrastructure.database.models.permission_model import (
 from app.infrastructure.database.models.role_permission_model import (
     RolePermissionModel
 )
+from app.infrastructure.database.seeds.role_permissions_catalog import (
+    ROLE_PERMISSIONS
+)
+
+from app.infrastructure.database.seeds.permissions_catalog import (
+    PERMISSIONS
+)
+
 
 
 def assign_permissions(
@@ -30,7 +38,9 @@ def assign_permissions(
 
     if not role:
 
-        return
+        raise Exception(
+            f"El rol '{role_name}' no existe."
+        )
 
     permissions = db.query(
         PermissionModel
@@ -39,6 +49,25 @@ def assign_permissions(
             permission_names
         )
     ).all()
+
+    found_permissions = {
+
+        permission.codigo
+
+        for permission in permissions
+
+    }
+
+    missing_permissions = set(permission_names) - found_permissions
+
+    if missing_permissions:
+
+        raise Exception(
+
+            f"Los siguientes permisos no existen: "
+            f"{', '.join(sorted(missing_permissions))}"
+
+        )
 
     for permission in permissions:
 
@@ -67,161 +96,23 @@ def assign_permissions(
 
 def seed_role_permissions(db: Session):
 
-    # =====================================
-    # SUPER ADMIN
-    # =====================================
+    all_permission_codes = list(PERMISSIONS.keys())
 
-    all_permissions = db.query(
-        PermissionModel
-    ).all()
+    for role_name, permissions in ROLE_PERMISSIONS.items():
 
-    assign_permissions(
+        if permissions == "__ALL__":
 
-        db,
+            permissions = all_permission_codes
 
-        "Super Admin",
+        assign_permissions(
 
-        [
-            p.codigo
-            for p in all_permissions
-        ]
-    )
+            db,
 
-    # =====================================
-    # GESTION HUMANA
-    # =====================================
+            role_name,
 
-    assign_permissions(
+            permissions
 
-        db,
-
-        "Gestion Humana",
-
-        [
-
-            # USERS
-            "create_user",
-            "view_users",
-            "view_user_detail",
-            "update_user",
-            "change_user_status",
-
-            # DOCUMENTS
-            "upload_documents",
-            "view_documents",
-            "view_any_document",
-            "delete_documents",
-            "delete_any_document",
-
-            # FILES
-            "upload_profile_photo",
-            "upload_signature"
-        ]
-    )
-
-    # =====================================
-    # EMPLEADO
-    # =====================================
-
-    assign_permissions(
-
-        db,
-
-        "Empleado",
-
-        [
-
-            # DOCUMENTS
-            "upload_documents",
-            "view_documents",
-            "delete_documents",
-
-            # FILES
-            "upload_profile_photo",
-            "upload_signature"
-        ]
-    )
-
-    # =====================================
-    # AUDITOR
-    # =====================================
-
-    assign_permissions(
-
-        db,
-
-        "Auditor",
-
-        [
-
-            "view_users",
-            "view_user_detail",
-
-            "view_documents",
-            "view_any_document",
-
-            "view_audit_logs"
-        ]
-    )
-
-    # =====================================
-    # SUPERVISOR
-    # =====================================
-
-    assign_permissions(
-
-        db,
-
-        "Supervisor",
-
-        [
-
-            "view_users",
-            "view_user_detail",
-
-            "view_documents",
-            "view_any_document"
-        ]
-    )
-
-    # =====================================
-    # GERENCIA
-    # =====================================
-
-    assign_permissions(
-
-        db,
-
-        "Gerencia",
-
-        [
-
-            "view_users",
-            "view_user_detail",
-
-            "view_documents",
-            "view_any_document",
-
-            "view_audit_logs"
-        ]
-    )
-
-    # =====================================
-    # PRACTICANTE
-    # =====================================
-
-    assign_permissions(
-
-        db,
-
-        "Practicante",
-
-        [
-
-            "upload_documents",
-            "view_documents"
-        ]
-    )
+        )
 
     print(
         "✅ Roles y permisos asignados"
