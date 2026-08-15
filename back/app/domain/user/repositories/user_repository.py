@@ -26,6 +26,14 @@ class UserRepository(ABC):
         pass
 
     @abstractmethod
+    def update_password(
+        self,
+        user_id: str,
+        password_hash: str
+    ):
+        pass
+
+    @abstractmethod
     def delete(self, user_id: str) -> None:
         pass
 
@@ -39,11 +47,11 @@ class UserRepository(ABC):
         self,
 
         skip: int,
-    
+
         limit: int,
-    
+
         search: str = None,
-    
+
         estado: bool = None,
 
         order_by: str= "created_at",
@@ -60,5 +68,27 @@ class UserRepository(ABC):
     def get_by_document(
         self,
         numero_documento: str
+    ):
+        pass
+
+    @abstractmethod
+    def update_onboarding_status(
+        self,
+        user_id: str,
+        status: str
+    ):
+        pass
+
+    @abstractmethod
+    def update_personal_info(
+        self,
+        user_id: str,
+        primer_nombre: str,
+        segundo_nombre: str,
+        primer_apellido: str,
+        segundo_apellido: str,
+        fecha_nacimiento,
+        email: str,
+        password_hash: str
     ):
         pass

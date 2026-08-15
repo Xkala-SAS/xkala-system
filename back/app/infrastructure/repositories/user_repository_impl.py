@@ -48,6 +48,7 @@ class UserRepositoryImpl(UserRepository):
             password_hash=user.password_hash,
             role_id=user.role_id,
             estado=user.estado,
+            onboarding_status=user.onboarding_status,
             created_at=user.created_at
         )
 
@@ -65,7 +66,7 @@ class UserRepositoryImpl(UserRepository):
             .filter(
                 UserModel.id == user_id,
                 UserModel.deleted_at == None
-            )  
+            )
             .first()
         )
 
@@ -77,24 +78,24 @@ class UserRepositoryImpl(UserRepository):
 ):
 
         db_user = (
-        
+
             self.db.query(UserModel)
-    
+
             .join(
                 UserDocumentModel,
                 UserDocumentModel.user_id == UserModel.id
             )
-    
+
             .filter(
                 UserDocumentModel.numero_documento == numero_documento,
                 UserModel.deleted_at == None
             )
-    
+
             .first()
         )
-    
+
         return self._to_domain(db_user)
-    
+
     def get_by_email(self, email: str):
 
             db_user = (
@@ -112,52 +113,120 @@ class UserRepositoryImpl(UserRepository):
     def update(self, user: User):
 
         db_user = (
-        
+
             self.db.query(UserModel)
-    
+
             .filter(
                 UserModel.id == user.id
             )
-    
+
             .first()
         )
-    
+
         if not db_user:
             return None
-    
+
         db_user.primer_nombre = (
             user.primer_nombre
         )
-    
+
         db_user.segundo_nombre = (
             user.segundo_nombre
         )
-    
+
         db_user.primer_apellido = (
             user.primer_apellido
         )
-    
+
         db_user.segundo_apellido = (
             user.segundo_apellido
         )
-    
+
         db_user.email = (
             user.email
         )
-    
+
         db_user.estado = (
             user.estado
         )
-    
+
         db_user.role_id = (
             user.role_id
         )
-    
+
         self.db.commit()
-    
+
         self.db.refresh(db_user)
-    
+
         return self._to_domain(db_user)
+
+
+    def update_personal_info(
+        self,
+        user_id: str,
+        primer_nombre: str,
+        segundo_nombre: str,
+        primer_apellido: str,
+        segundo_apellido: str,
+        fecha_nacimiento,
+        email: str,
+        password_hash: str
+    ):
+
+        db_user = (
+            self.db.query(UserModel)
+            .filter(
+                UserModel.id == user_id
+            )
+            .first()
+        )
+
+        if not db_user:
+            return None
+
+        db_user.primer_nombre = primer_nombre
+
+        db_user.segundo_nombre = segundo_nombre
+
+        db_user.primer_apellido = primer_apellido
+
+        db_user.segundo_apellido = segundo_apellido
+
+        db_user.fecha_nacimiento = fecha_nacimiento
+
+        db_user.email = email
+
+        db_user.password_hash = password_hash
+
+        self.db.commit()
+
+        self.db.refresh(db_user)
+
+        return self._to_domain(db_user)
+
+
+    def update_password(
+        self,
+        user_id: str,
+        password_hash: str
+    ):
+
+        user = (
+            self.db.query(UserModel)
+            .filter(
+                UserModel.id == user_id
+            )
+            .first()
+        )
+
+        if not user:
+            return None
+
+        user.password_hash = password_hash
+
+        self.db.commit()
+
+        return True
 
     def delete(self, user_id: str):
 
@@ -176,7 +245,7 @@ class UserRepositoryImpl(UserRepository):
             )
 
             self.db.commit()
-            
+
     def _to_domain(
     self,
     db_user: UserModel
@@ -184,31 +253,33 @@ class UserRepositoryImpl(UserRepository):
 
         if not db_user:
             return None
-    
+
         return User(
-        
+
             id=db_user.id,
-    
+
             primer_nombre=db_user.primer_nombre,
-    
+
             segundo_nombre=db_user.segundo_nombre,
-    
+
             primer_apellido=db_user.primer_apellido,
-    
+
             segundo_apellido=db_user.segundo_apellido,
-    
+
             fecha_nacimiento=db_user.fecha_nacimiento,
-    
+
             email=db_user.email,
-    
+
             password_hash=db_user.password_hash,
-    
+
             role_id=db_user.role_id,
-    
+
             role=db_user.role,
-    
+
             estado=db_user.estado,
-    
+
+             onboarding_status=db_user.onboarding_status,
+
             created_at=db_user.created_at
         )
 
@@ -219,7 +290,7 @@ class UserRepositoryImpl(UserRepository):
             self.db.query(UserModel)
 
             .options(
-            
+
                 joinedload(UserModel.role),
 
                 joinedload(UserModel.documents)
@@ -296,13 +367,8 @@ class UserRepositoryImpl(UserRepository):
 
     ):
 
-        query = (
-
-            self.db.query(UserModel)
-
-            .filter(
-                UserModel.deleted_at == None
-            )
+        query = self.db.query(
+            UserModel
         )
 
         # =====================
@@ -363,13 +429,13 @@ class UserRepositoryImpl(UserRepository):
             query = query.order_by(
                 order_column.asc()
             )
-        
+
         else:
-        
+
             query = query.order_by(
                 order_column.desc()
             )
-        
+
         return (
 
             query
@@ -380,49 +446,154 @@ class UserRepositoryImpl(UserRepository):
 
             .all()
         )
-    
+
     def count_users(
 
         self,
-    
+
         search: str = None,
-    
+
         estado: bool = None
     ):
-    
-        query = (
-        
-            self.db.query(UserModel)
-    
-            .filter(
-                UserModel.deleted_at == None
-            )
+
+        query = self.db.query(
+            UserModel
         )
-    
+
         if search:
-        
+
             query = query.filter(
-            
+
                 or_(
-                
+
                     UserModel.primer_nombre.ilike(
                         f"%{search}%"
                     ),
-    
+
                     UserModel.primer_apellido.ilike(
                         f"%{search}%"
                     ),
-    
+
                     UserModel.email.ilike(
                         f"%{search}%"
                     )
                 )
             )
-    
+
         if estado is not None:
-        
+
             query = query.filter(
                 UserModel.estado == estado
             )
-    
+
         return query.count()
+
+
+    def restore(
+        self,
+        user_id: str
+    ):
+
+        db_user = (
+
+            self.db.query(UserModel)
+
+            .filter(
+                UserModel.id == user_id
+            )
+
+            .first()
+        )
+
+        if not db_user:
+            return None
+
+        db_user.estado = True
+
+        db_user.deleted_at = None
+
+        self.db.commit()
+
+        self.db.refresh(
+            db_user
+        )
+
+        return self._to_domain(
+            db_user
+        )
+
+    def count_all(self):
+
+        return (
+            self.db
+            .query(UserModel)
+            .count()
+        )
+
+
+    def count_active(self):
+
+        return (
+            self.db
+            .query(UserModel)
+            .filter(
+                UserModel.estado == True
+            )
+            .count()
+        )
+
+
+    def count_inactive(self):
+
+        return (
+            self.db
+            .query(UserModel)
+            .filter(
+                UserModel.estado == False
+            )
+            .count()
+        )
+
+    def get_onboarding_status(
+        self,
+        user_id: str
+    ):
+
+        user = (
+
+            self.db
+            .query(UserModel)
+            .filter(
+                UserModel.id == user_id
+            )
+            .first()
+        )
+
+        if not user:
+            return None
+
+        return user.onboarding_status
+
+    def update_onboarding_status(
+        self,
+        user_id: str,
+        status: str
+    ):
+
+        user = (
+
+            self.db.query(UserModel)
+
+            .filter(
+                UserModel.id == user_id
+            )
+
+            .first()
+        )
+
+        if not user:
+            return
+
+        user.onboarding_status = status
+
+        self.db.commit()

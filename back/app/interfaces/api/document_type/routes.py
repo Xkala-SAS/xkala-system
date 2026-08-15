@@ -64,3 +64,25 @@ def seed_document_types():
     return {
         "message": "Tipos documento creados"
     }
+
+@router.get("")
+def list_document_types():
+
+    db: Session = SessionLocal()
+
+    document_types = (
+        db.query(DocumentTypeModel)
+        .all()
+    )
+
+    return {
+        "success": True,
+        "data": [
+            {
+                "id": item.id,
+                "codigo": item.codigo,
+                "nombre": item.nombre
+            }
+            for item in document_types
+        ]
+    }

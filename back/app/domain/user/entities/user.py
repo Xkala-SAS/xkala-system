@@ -9,6 +9,10 @@ from app.domain.user.exceptions.user_validation_exceptions import (
     MissingRoleException
 )
 
+from app.domain.user.enums.onboarding_status import (
+    OnboardingStatus
+)
+
 
 class User:
 
@@ -25,7 +29,10 @@ class User:
         id: str = None,
         estado: bool = True,
         created_at: datetime = None,
-        role=None
+        role=None,
+        onboarding_status: str = (
+            OnboardingStatus.PENDING
+        )
     ):
 
         self.id = id or str(uuid4())
@@ -46,6 +53,10 @@ class User:
         self.role = role
 
         self.estado = estado
+
+        self.onboarding_status = (
+            onboarding_status
+        )
 
         self.created_at = created_at or datetime.utcnow()
 

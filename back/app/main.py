@@ -54,6 +54,15 @@ from app.interfaces.api.hr.routes import (
 from app.core.middleware.audit_middleware import (
     AuditMiddleware
 )
+from app.interfaces.api.auth.routes import (
+    router as auth_router
+)
+
+from app.interfaces.api.dashboard.routes import (
+    router as dashboard_router
+)
+
+
 
 # ==========================================
 # CREATE UPLOADS DIRECTORY
@@ -69,28 +78,13 @@ os.makedirs(
 # ==========================================
 
 app = FastAPI(
-    title="Xkala System API"
+    title=settings.APP_NAME,
+    debug=settings.DEBUG,
+    #root_path=settings.ROOT_PATH,
+    docs_url="/docs",
+    redoc_url="/redoc",
+    openapi_url="/openapi.json",
 )
-
-# ==========================================
-# EXCEPTION HANDLERS
-# ==========================================
-
-@app.exception_handler(
-    InvalidCredentialsException
-)
-async def invalid_credentials_handler(
-    request: Request,
-    exc: InvalidCredentialsException
-):
-    return JSONResponse(
-        status_code=401,
-        content={
-            "success": False,
-            "message": str(exc)
-        }
-    )
-
 register_exception_handlers(app)
 
 # ==========================================
@@ -100,7 +94,7 @@ register_exception_handlers(app)
 app.add_middleware(
     CORSMiddleware,
 
-    allow_origins=[settings.CORS_ORIGINS],
+    allow_origins=settings.cors_origins,
 
     allow_credentials=True,
 
@@ -114,6 +108,16 @@ app.add_middleware(
 )
 
 app.add_middleware(AuditMiddleware)
+
+@app.middleware("http")
+async def debug_request(request: Request, call_next):
+    print("=" * 60)
+    print("URL       :", request.url)
+    print("PATH      :", request.url.path)
+    print("ROOT_PATH :", request.scope.get("root_path"))
+    print("HEADERS   :", dict(request.headers))
+    response = await call_next(request)
+    return response
 
 # ==========================================
 # STATIC FILES
@@ -144,6 +148,13 @@ app.include_router(document_type_router)
 app.include_router(city_router)
 
 app.include_router(hr_router)
+
+app.include_router(auth_router)
+
+app.include_router(
+    dashboard_router
+)
+
 
 # ==========================================
 # ROOT

@@ -27,7 +27,7 @@ class UploadSignatureService:
 
         file: UploadFile,
 
-        current_user
+        user_id: str
 
     ):
 
@@ -65,7 +65,7 @@ class UploadSignatureService:
             self.repository
             .get_files_by_type(
 
-                current_user.id,
+                user_id,
 
                 "signature"
             )
@@ -81,7 +81,7 @@ class UploadSignatureService:
 
         user_file = UserFileModel(
 
-            user_id=current_user.id,
+            user_id=user_id,
 
             file_type="signature",
 

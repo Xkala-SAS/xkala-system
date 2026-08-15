@@ -23,6 +23,11 @@ class UserModel(
     email = Column(String(100), unique=True, nullable=False)
     password_hash = Column(String(255), nullable=False)
     estado = Column(Boolean, default=True)
+    onboarding_status = Column(
+    String(30),
+    nullable=False,
+    default="PENDING"
+)
     role_id = Column(
     String(36),
     ForeignKey("roles.id"),

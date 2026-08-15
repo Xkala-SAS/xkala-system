@@ -7,6 +7,9 @@ from app.infrastructure.database.db import SessionLocal
 from app.infrastructure.database.models.city_model import (
     CityModel
 )
+from app.core.responses.response_handler import (
+    success_response
+)
 
 
 router = APIRouter(
@@ -108,3 +111,40 @@ def seed_cities():
     return {
         "message": "Ciudades creadas"
     }
+
+
+@router.get("")
+def get_cities():
+
+    db: Session = SessionLocal()
+
+    cities = (
+
+        db.query(
+            CityModel
+        )
+
+        .order_by(
+            CityModel.nombre.asc()
+        )
+
+        .all()
+    )
+
+    return success_response(
+
+        data=[
+
+            {
+                "id": city.id,
+
+                "nombre": city.nombre,
+
+                "departamento": city.departamento
+            }
+
+            for city in cities
+        ],
+
+        message="Ciudades obtenidas correctamente"
+    )

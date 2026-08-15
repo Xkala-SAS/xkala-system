@@ -17,9 +17,13 @@ from app.core.validators.file_validator import (
 
 class UploadProfilePhotoService:
 
-    def __init__(self, repository):
+    def __init__(self, repository, onboarding_sync_service):
 
         self.repository = repository
+
+        self.onboarding_sync_service = (
+            onboarding_sync_service
+        )
 
     def execute(
 
@@ -27,42 +31,68 @@ class UploadProfilePhotoService:
 
         file: UploadFile,
 
-        current_user
+        current_user=None,
+
+        user_id: str = None
 
     ):
 
-        # validar archivo
+        # ==============================
+        # VALIDAR ARCHIVO
+        # ==============================
+
         FileValidator.validate_profile_photo(
             file
         )
 
-        # reiniciar stream
+        # ==============================
+        # REINICIAR STREAM
+        # ==============================
+
         file.file.seek(0)
 
-        # guardar archivo físico
+        # ==============================
+        # OBTENER USUARIO DESTINO
+        # ==============================
+
+        target_user_id = (
+            user_id
+            if user_id
+            else current_user.id
+        )
+
+        # ==============================
+        # GUARDAR ARCHIVO
+        # ==============================
+
         path = save_file(
             file,
             "users/profile"
         )
 
-        # buscar fotos principales previas
+        # ==============================
+        # DESACTIVAR FOTO ANTERIOR
+        # ==============================
+
         previous_photos = (
 
             self.repository
             .get_primary_profile_photos(
-                current_user.id
+                target_user_id
             )
         )
 
-        # desactivar anteriores
         for photo in previous_photos:
 
             photo.is_primary = False
 
-        # nueva foto
+        # ==============================
+        # NUEVA FOTO
+        # ==============================
+
         user_file = UserFileModel(
 
-            user_id=current_user.id,
+            user_id=target_user_id,
 
             file_type="profile_photo",
 
@@ -75,15 +105,22 @@ class UploadProfilePhotoService:
             is_primary=True
         )
 
-        # guardar metadata
+        # ==============================
+        # GUARDAR EN DB
+        # ==============================
+
         self.repository.save_user_file(
             user_file
+        )
+
+        self.onboarding_sync_service.execute(
+            target_user_id
         )
 
         return {
 
             "message":
-                "Archivo subido correctamente",
+                "Foto de perfil subida correctamente",
 
             "path":
                 path,

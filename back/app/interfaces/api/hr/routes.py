@@ -160,37 +160,37 @@ def seed_laboral_catalogs():
         "nombre": "Gerente de Proyecto",
         "descripcion": "Gestión integral de proyectos"
         },
-    
+
         {
             "nombre": "Gerente de Gestión Integral",
             "descripcion": "Gestión organizacional"
         },
-    
+
         {
             "nombre": "Asistente de Gestión Humana",
             "descripcion": "Apoyo RRHH"
         },
-    
+
         {
             "nombre": "Asistente de Proyecto",
             "descripcion": "Apoyo operativo proyectos"
         },
-    
+
         {
             "nombre": "Practicante Operativo",
             "descripcion": "Apoyo operativo"
         },
-    
+
         {
             "nombre": "Practicante Administrativo",
             "descripcion": "Apoyo administrativo"
         },
-    
+
         {
             "nombre": "Supervisor de Mantenimiento",
             "descripcion": "Supervisión mantenimiento"
         },
-    
+
         {
             "nombre": "Auxiliar de Mantenimiento",
             "descripcion": "Mantenimiento operativo"
@@ -251,4 +251,134 @@ def seed_laboral_catalogs():
     return {
         "message":
             "Catálogos laborales creados"
+    }
+
+
+@router.get("/eps")
+def list_eps():
+
+    db: Session = SessionLocal()
+
+    items = db.query(EPSModel).order_by(
+        EPSModel.nombre.asc()
+    ).all()
+
+    return {
+        "success": True,
+        "data": [
+            {
+                "id": item.id,
+                "nombre": item.nombre
+            }
+            for item in items
+        ]
+    }
+
+@router.get("/arls")
+def list_arls():
+
+    db: Session = SessionLocal()
+
+    items = db.query(ARLModel).order_by(
+        ARLModel.nombre.asc()
+    ).all()
+
+    return {
+        "success": True,
+        "data": [
+            {
+                "id": item.id,
+                "nombre": item.nombre
+            }
+            for item in items
+        ]
+    }
+
+@router.get("/pension-funds")
+def list_pension_funds():
+
+    db: Session = SessionLocal()
+
+    items = db.query(
+        PensionFundModel
+    ).order_by(
+        PensionFundModel.nombre.asc()
+    ).all()
+
+    return {
+        "success": True,
+        "data": [
+            {
+                "id": item.id,
+                "nombre": item.nombre
+            }
+            for item in items
+        ]
+    }
+
+@router.get("/severance-funds")
+def list_severance_funds():
+
+    db: Session = SessionLocal()
+
+    items = db.query(
+        SeveranceFundModel
+    ).order_by(
+        SeveranceFundModel.nombre.asc()
+    ).all()
+
+    return {
+        "success": True,
+        "data": [
+            {
+                "id": item.id,
+                "nombre": item.nombre
+            }
+            for item in items
+        ]
+    }
+
+@router.get("/positions")
+def list_positions():
+
+    db: Session = SessionLocal()
+
+    items = db.query(
+        PositionModel
+    ).order_by(
+        PositionModel.nombre.asc()
+    ).all()
+
+    return {
+        "success": True,
+        "data": [
+            {
+                "id": item.id,
+                "nombre": item.nombre,
+                "descripcion": item.descripcion
+            }
+            for item in items
+        ]
+    }
+
+@router.get("/contract-types")
+def list_contract_types():
+
+    db: Session = SessionLocal()
+
+    items = db.query(
+        ContractTypeModel
+    ).order_by(
+        ContractTypeModel.nombre.asc()
+    ).all()
+
+    return {
+        "success": True,
+        "data": [
+            {
+                "id": item.id,
+                "nombre": item.nombre
+            }
+            for item in items
+        ]
     }

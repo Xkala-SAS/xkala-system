@@ -13,6 +13,10 @@ from app.domain.user.exceptions.user_validation_exceptions import (
     DocumentAlreadyExistsException
 )
 
+from app.domain.user.enums.onboarding_status import (
+    OnboardingStatus
+)
+
 
 class CreateUserUseCase:
 
@@ -72,7 +76,8 @@ class CreateUserUseCase:
             fecha_nacimiento=fecha_nacimiento,
             email=email,
             password_hash=password_hash,
-            role_id=role_id
+            role_id=role_id,
+            onboarding_status=OnboardingStatus.PENDING
         )
 
         saved_user = (

@@ -29,7 +29,9 @@ class UploadDocumentService:
 
         document_type: str,
 
-        current_user
+        current_user=None,
+
+        user_id: str = None
 
     ):
 
@@ -59,12 +61,22 @@ class UploadDocumentService:
         )
 
         # ==============================
+        # USUARIO DESTINO
+        # ==============================
+
+        target_user_id = (
+            user_id
+            if user_id
+            else current_user.id
+        )
+
+        # ==============================
         # CREAR REGISTRO
         # ==============================
 
         user_file = UserFileModel(
 
-            user_id=current_user.id,
+            user_id=target_user_id,
 
             file_type=document_type,
 

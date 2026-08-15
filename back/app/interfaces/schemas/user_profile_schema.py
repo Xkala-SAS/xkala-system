@@ -71,6 +71,10 @@ class LaboralResponse(BaseModel):
 
     fecha_ingreso: datetime
 
+    remuneration_type: str
+
+    remuneration_value: float
+
     activo: bool
 
 
@@ -113,6 +117,8 @@ class UserProfileResponse(BaseModel):
     estado: bool
 
     rol: str
+
+    permissions: List[str] = []
 
     documento: Optional[DocumentResponse] = None
 

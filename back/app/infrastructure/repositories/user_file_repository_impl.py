@@ -87,17 +87,17 @@ class UserFileRepositoryImpl(
         self.db.refresh(user_file)
 
         return user_file
-    
+
     def get_user_files(self, user_id):
 
         return (
-        
+
             self.db
             .query(UserFileModel)
             .filter(
-            
+
                 UserFileModel.user_id == user_id,
-    
+
                 UserFileModel.is_active == True
             )
             .order_by(
@@ -105,11 +105,11 @@ class UserFileRepositoryImpl(
             )
             .all()
         )
-    
+
     def get_by_id(self, document_id):
 
         return (
-        
+
             self.db
             .query(UserFileModel)
             .filter(
@@ -117,8 +117,31 @@ class UserFileRepositoryImpl(
             )
             .first()
         )
-    
-    
+
+
     def commit(self):
-    
+
         self.db.commit()
+
+    def count_all(self):
+
+        return (
+            self.db
+            .query(UserFileModel)
+            .count()
+        )
+
+
+    def count_by_type(
+        self,
+        file_type: str
+    ):
+
+        return (
+            self.db
+            .query(UserFileModel)
+            .filter(
+                UserFileModel.file_type == file_type
+            )
+            .count()
+        )

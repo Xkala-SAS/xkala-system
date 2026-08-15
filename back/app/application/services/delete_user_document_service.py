@@ -33,15 +33,15 @@ class DeleteUserDocumentService:
                 "Documento no encontrado"
             )
 
-        # ==============================
-        # VALIDAR PROPIETARIO
-        # ==============================
-
-        if str(document.user_id) != str(current_user.id):
+        if not document.is_active:
 
             raise BadRequestException(
-                "No tienes acceso a este documento"
+                "El documento ya fue eliminado"
             )
+
+        document.is_active = False
+
+        self.repository.commit()
 
         # ==============================
         # SOFT DELETE

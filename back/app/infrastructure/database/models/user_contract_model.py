@@ -5,7 +5,8 @@ from sqlalchemy import (
     String,
     ForeignKey,
     DateTime,
-    Boolean
+    Boolean,
+    Numeric
 )
 from sqlalchemy.orm import relationship
 
@@ -43,6 +44,16 @@ class UserContractModel(Base, BaseModelMixin):
         nullable=False
     )
 
+    remuneration_type = Column(
+        String(20),
+        nullable=False
+    )
+
+    remuneration_value = Column(
+        Numeric(12, 2),
+        nullable=False
+    )
+
     estado_laboral = Column(
         Boolean,
         default=True
@@ -56,7 +67,7 @@ class UserContractModel(Base, BaseModelMixin):
     position = relationship(
         "PositionModel"
     )
-    
+
     contract_type = relationship(
         "ContractTypeModel"
     )

@@ -17,6 +17,30 @@ class UserProfileMapper:
 
         contacts = user.contacts if user.contacts else []
 
+        profile_photo = next(
+            (
+                file.file_path
+                for file in files
+                if (
+                    file.file_type == "profile_photo"
+                    and file.is_primary
+                )
+            ),
+            None
+        )
+
+        signature = next(
+            (
+                file.file_path
+                for file in files
+                if (
+                    file.file_type == "signature"
+                    and file.is_primary
+                )
+            ),
+            None
+        )
+
         return {
 
             "id": user.id,
@@ -27,11 +51,26 @@ class UserProfileMapper:
                 f"{user.primer_apellido} "
                 f"{user.segundo_apellido or ''}",
 
+            "profile_photo": profile_photo,
+
+            "signature": signature,
+
             "email": user.email,
 
             "estado": user.estado,
 
-            "rol": user.role.nombre if user.role else None,
+            "rol": user.role.nombre if user.role
+             else None,
+
+
+
+            "permissions": [
+
+                permission.codigo
+
+                for permission in user.role.permissions
+
+            ] if user.role else [],
 
             "documento": {
 
@@ -111,6 +150,12 @@ class UserProfileMapper:
 
                 "fecha_ingreso":
                     contract.fecha_ingreso,
+
+                "remuneration_type":
+                    contract.remuneration_type,
+
+                "remuneration_value":
+                    float(contract.remuneration_value),
 
                 "activo":
                     contract.estado_laboral

@@ -41,101 +41,119 @@ class Settings(BaseSettings):
     # APP
     # ======================================
 
-    APP_NAME: str
+    APP_NAME:str
 
-    APP_ENV: str
+    APP_ENV:str
 
-    DEBUG: bool
+    DEBUG:bool
+
+    ROOT_PATH: str = ""
+    PROXY_HEADERS: bool = True
 
 
     # ======================================
     # SECURITY
     # ======================================
 
-    SECRET_KEY: str
+    SECRET_KEY:str
 
-    ALGORITHM: str
+    ALGORITHM:str
 
-    ACCESS_TOKEN_EXPIRE_MINUTES: int
+    ACCESS_TOKEN_EXPIRE_MINUTES:int
+
+    REFRESH_TOKEN_EXPIRE_DAYS:int
 
 
     # ======================================
     # DATABASE
     # ======================================
 
-    DB_HOST: str
+    DB_HOST:str
 
-    DB_PORT: int
+    DB_PORT:int
 
-    DB_USER: str
+    DB_USER:str
 
-    DB_PASSWORD: str
+    DB_PASSWORD:str
 
-    DB_NAME: str
+    DB_NAME:str
 
 
     # ======================================
     # CORS
     # ======================================
 
-    CORS_ORIGINS: str
+    CORS_ORIGINS:str
+
+
+    @property
+    def cors_origins(self):
+
+        return [
+
+            origin.strip()
+
+            for origin in self.CORS_ORIGINS.split(",")
+
+        ]
 
 
     # ======================================
     # PROFILE FILES
     # ======================================
 
-    PROFILE_ALLOWED_EXTENSIONS: list[str] = [
+    PROFILE_ALLOWED_EXTENSIONS:list[str]=[
         "jpg",
         "jpeg",
         "png",
         "webp"
     ]
 
-    PROFILE_ALLOWED_MIME_TYPES: list[str] = [
+    PROFILE_ALLOWED_MIME_TYPES:list[str]=[
         "image/jpeg",
         "image/png",
         "image/webp"
     ]
 
-    PROFILE_MAX_SIZE_MB: int = 5
+    PROFILE_MAX_SIZE_MB:int=5
 
 
     # ======================================
     # SIGNATURE FILES
     # ======================================
 
-    SIGNATURE_ALLOWED_EXTENSIONS: list[str] = [
+    SIGNATURE_ALLOWED_EXTENSIONS:list[str]=[
         "jpg",
         "jpeg",
         "png"
     ]
 
-    SIGNATURE_ALLOWED_MIME_TYPES: list[str] = [
+    SIGNATURE_ALLOWED_MIME_TYPES:list[str]=[
         "image/jpeg",
         "image/png"
     ]
 
-    SIGNATURE_MAX_SIZE_MB: int = 3
+    SIGNATURE_MAX_SIZE_MB:int=3
+
 
     # ======================================
     # DOCUMENT FILES
     # ======================================
-    
-    DOCUMENT_ALLOWED_EXTENSIONS: list[str] = [
+
+    DOCUMENT_ALLOWED_EXTENSIONS:list[str]=[
         "pdf",
         "jpg",
         "jpeg",
         "png"
     ]
-    
-    DOCUMENT_ALLOWED_MIME_TYPES: list[str] = [
+
+    DOCUMENT_ALLOWED_MIME_TYPES:list[str]=[
         "application/pdf",
         "image/jpeg",
         "image/png"
     ]
-    
-    DOCUMENT_MAX_SIZE_MB: int = 10
+
+    DOCUMENT_MAX_SIZE_MB:int=10
 
 
     # ======================================
@@ -143,7 +161,7 @@ class Settings(BaseSettings):
     # ======================================
 
     @property
-    def DATABASE_URL(self) -> str:
+    def DATABASE_URL(self):
 
         return (
 
@@ -158,6 +176,7 @@ class Settings(BaseSettings):
             f"{self.DB_PORT}/"
 
             f"{self.DB_NAME}"
+
         )
 
 
@@ -166,9 +185,6 @@ class Settings(BaseSettings):
     # ======================================
 
     model_config = SettingsConfigDict(
-
-        env_file=env_file,
-
         extra="ignore"
     )
 
@@ -177,4 +193,4 @@ class Settings(BaseSettings):
 # INSTANCE
 # ==========================================
 
-settings = Settings()
+settings=Settings()
