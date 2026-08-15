@@ -1,0 +1,9 @@
+class OnboardingStatus:
+
+    PENDING = "PENDING"
+
+    IN_PROGRESS = "IN_PROGRESS"
+
+    COMPLETED = "COMPLETED"
+
+    REJECTED = "REJECTED"
