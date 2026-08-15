@@ -1,0 +1,139 @@
+<div class="container-fluid">
+  <div class="card border-0 shadow-sm rounded-4 p-4">
+    <app-page-header
+      [title]="'Usuarios'"
+      [subtitle]="'Gestión de usuarios del sistema'"
+      [buttonText]="'Nuevo usuario'"
+      (buttonClicked)="openCreateModal()"
+    />
+
+    <div class="row mb-4">
+      <div class="col-12 col-md-4 mb-1">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Buscar usuario..."
+          [(ngModel)]="searchTerm"
+          (keyup.enter)="search()"
+        />
+      </div>
+
+      <div class="col-12 col-md-3">
+        <select class="form-select" [(ngModel)]="statusFilter" (change)="search()">
+          <option value="">Todos</option>
+
+          <option value="true">Activos</option>
+
+          <option value="false">Inactivos</option>
+        </select>
+      </div>
+
+      <div class="col-12 col-md-3">
+        <select class="form-select" [(ngModel)]="orderBy" (change)="onOrderChange()">
+          <option value="created_at">Más recientes</option>
+
+          <option value="primer_nombre">Nombre</option>
+
+          <option value="email">Correo</option>
+        </select>
+      </div>
+
+      <div class="col-12 col-md-2">
+        <select class="form-select" [(ngModel)]="direction" (change)="onOrderChange()">
+          <option value="desc">Descendente</option>
+
+          <option value="asc">Ascendente</option>
+        </select>
+      </div>
+
+      <div class="col-auto">
+        <button class="btn btn-danger" (click)="search()">Buscar</button>
+      </div>
+    </div>
+
+    @if (loading) {
+      <app-loading />
+    } @else {
+      <app-data-table
+        [columns]="columns"
+        [data]="users"
+        [actions]="true"
+        (viewClicked)="openViewModal($event)"
+        (editClicked)="openEditModal($event)"
+        (deleteClicked)="confirmDelete($event)"
+        (restoreClicked)="confirmRestore($event)"
+      />
+
+      <div class="d-flex justify-content-end align-items-center gap-3 mt-3">
+        <button class="btn btn-success" (click)="exportUsers()">
+          <i class="bi bi-file-earmark-excel me-2"></i>
+
+          Exportar Excel
+        </button>
+
+        <button
+          class="btn btn-outline-secondary"
+          (click)="previousPage()"
+          [disabled]="currentPage === 1"
+        >
+          Anterior
+        </button>
+
+        <span>
+          Página {{ currentPage }}
+          de
+          {{ totalPages }}
+        </span>
+
+        <button
+          class="btn btn-outline-secondary"
+          (click)="nextPage()"
+          [disabled]="currentPage === totalPages"
+        >
+          Siguiente
+        </button>
+      </div>
+
+      <app-modal
+        [visible]="showCreateModal"
+        [title]="'Crear usuario'"
+        (closed)="closeCreateModal()"
+      >
+        <app-create-user-form (userCreated)="onUserCreated()" />
+      </app-modal>
+
+      <app-modal [visible]="showEditModal" [title]="'Editar usuario'" (closed)="closeEditModal()">
+        @if (selectedUser) {
+          <app-edit-user-form [userId]="selectedUser.id" (updated)="onUserUpdated()" />
+        }
+      </app-modal>
+
+      <app-modal
+        [visible]="showViewModal"
+        [title]="'Perfil del usuario'"
+        [size]="'full'"
+        (closed)="closeViewModal()"
+      >
+        @if (selectedUserId) {
+          <app-user-profile [userId]="selectedUserId" />
+        }
+      </app-modal>
+
+      <app-confirm-dialog
+        [visible]="showDeleteDialog"
+        [title]="'Eliminar usuario'"
+        [message]="'¿Deseas eliminar este usuario?'"
+        (confirmed)="deleteUser()"
+        (cancelled)="closeDeleteDialog()"
+      />
+
+      <app-confirm-dialog
+        [visible]="showRestoreDialog"
+        [title]="'Reactivar usuario'"
+        [message]="'¿Deseas reactivar este usuario?'"
+        (confirmed)="restoreUser()"
+        (cancelled)="closeRestoreDialog()"
+      />
+    }
+  </div>
+</div>

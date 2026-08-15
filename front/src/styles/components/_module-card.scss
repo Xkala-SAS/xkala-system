@@ -1,0 +1,55 @@
+.module-card {
+  display: block;
+
+  height: 100%;
+
+  padding: var(--space-5);
+
+  background: var(--color-surface-card);
+
+  border: 1px solid var(--color-border);
+
+  border-radius: var(--radius-md);
+
+  color: var(--color-text);
+
+  text-decoration: none;
+
+  box-shadow: var(--shadow-md);
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.module-card:hover {
+  transform: translateY(-4px);
+
+  border-color: var(--color-primary);
+}
+
+.module-card i {
+  display: block;
+
+  margin-bottom: var(--space-4);
+
+  font-size: 2rem;
+
+  color: var(--color-primary);
+}
+
+.module-card h5 {
+  margin-bottom: var(--space-2);
+
+  color: var(--color-text);
+
+  font-weight: 600;
+}
+
+.module-card p {
+  margin: 0;
+
+  color: var(--color-text-muted);
+
+  font-size: var(--text-sm);
+}

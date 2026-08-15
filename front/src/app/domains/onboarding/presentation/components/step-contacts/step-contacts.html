@@ -1,0 +1,18 @@
+
+<form [formGroup]="form">
+  <div class="mb-3">
+    <label class="form-label"> Teléfono principal </label>
+
+    <input type="text" class="form-control" formControlName="phone" />
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label"> Teléfono de emergencia </label>
+
+    <input type="text" class="form-control" formControlName="emergencyPhone" />
+  </div>
+
+  <button type="button" class="btn btn-danger" [disabled]="form.invalid" (click)="save()">
+    Guardar y continuar
+  </button>
+</form>

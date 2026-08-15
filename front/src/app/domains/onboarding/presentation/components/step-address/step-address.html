@@ -1,0 +1,44 @@
+
+<form [formGroup]="form">
+  <div class="mb-3">
+    <label class="form-label"> Dirección </label>
+
+    <input
+      type="text"
+      class="form-control"
+      formControlName="direccion"
+      placeholder="Ej: Calle 84 # 45 - 20"
+    />
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label"> Barrio </label>
+
+    <input
+      type="text"
+      class="form-control"
+      formControlName="barrio"
+      placeholder="Ej: Villa Carolina"
+    />
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label"> Ciudad </label>
+
+    <select class="form-select" formControlName="city_id">
+      <option value="">Seleccione una ciudad</option>
+
+      @for (city of cities; track city.id) {
+        <option [value]="city.id">
+          {{ city.nombre }}
+          -
+          {{ city.departamento }}
+        </option>
+      }
+    </select>
+  </div>
+
+  <button type="button" class="btn btn-danger" [disabled]="form.invalid" (click)="save()">
+    Guardar y continuar
+  </button>
+</form>

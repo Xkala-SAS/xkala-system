@@ -1,0 +1,23 @@
+@if (visible()) {
+  <div class="dialog-backdrop" (click)="cancelled.emit()">
+    <div class="dialog-card" (click)="$event.stopPropagation()">
+      <div class="dialog-header">
+        <h5>
+          {{ title() }}
+        </h5>
+      </div>
+
+      <div class="dialog-body">
+        <p>
+          {{ message() }}
+        </p>
+      </div>
+
+      <div class="dialog-footer">
+        <button class="btn btn-outline-secondary" (click)="cancelled.emit()">Cancelar</button>
+
+        <button class="btn btn-danger" (click)="confirmed.emit()">Confirmar</button>
+      </div>
+    </div>
+  </div>
+}

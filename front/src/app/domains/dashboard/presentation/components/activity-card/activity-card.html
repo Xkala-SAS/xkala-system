@@ -1,0 +1,15 @@
+<div class="activity-list">
+  <div class="activity-item" *ngFor="let activity of activities">
+    <div class="activity-dot"></div>
+
+    <div class="activity-content">
+      <h5>
+        {{ activity.title }}
+      </h5>
+
+      <span>
+        {{ activity.time }}
+      </span>
+    </div>
+  </div>
+</div>

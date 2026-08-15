@@ -1,0 +1,23 @@
+<form [formGroup]="form">
+  <div class="mb-3">
+    <label class="form-label"> Talla camisa </label>
+
+    <input type="text" class="form-control" formControlName="shirt_size" placeholder="Ej: M" />
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label"> Talla pantalón </label>
+
+    <input type="text" class="form-control" formControlName="pants_size" placeholder="Ej: 32" />
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label"> Talla zapato </label>
+
+    <input type="text" class="form-control" formControlName="shoe_size" placeholder="Ej: 41" />
+  </div>
+
+  <button type="button" class="btn btn-danger" [disabled]="form.invalid" (click)="save()">
+    Guardar y continuar
+  </button>
+</form>

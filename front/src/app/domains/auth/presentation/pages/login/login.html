@@ -1,0 +1,34 @@
+<div class="login-page">
+  <div class="login-wrapper">
+    <div class="login-card">
+      <div class="text-center mb-4">
+        <img src="images/logo-xkala.png" alt="XKALA" class="sidebar-logo" />
+        <h1>Login</h1>
+      </div>
+
+      <form (ngSubmit)="login()">
+        <div class="mb-3">
+          <input
+            type="text"
+            class="form-control custom-input"
+            placeholder="Documento"
+            [(ngModel)]="numeroDocumento"
+            name="numeroDocumento"
+          />
+        </div>
+
+        <div class="mb-4">
+          <input
+            type="password"
+            class="form-control custom-input"
+            placeholder="Contraseña"
+            [(ngModel)]="password"
+            name="password"
+          />
+        </div>
+
+        <button type="submit" class="btn login-btn w-100">Ingresar</button>
+      </form>
+    </div>
+  </div>
+</div>

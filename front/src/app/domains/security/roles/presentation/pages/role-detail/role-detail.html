@@ -1,0 +1,33 @@
+@if (loading) {
+  <div class="spinner-border"></div>
+}
+
+@if (role) {
+  <div class="hero-card mb-4">
+    <h2>{{ role.nombre }}</h2>
+
+    <p>{{ role.descripcion }}</p>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Permisos asignados</div>
+
+    <div class="card-body">
+      <div class="row g-3">
+        @for (permission of role.permissions; track permission.id) {
+          <div class="col-md-4">
+            <div class="permission-card">
+              <strong>
+                {{ permission.codigo }}
+              </strong>
+
+              <small>
+                {{ permission.descripcion }}
+              </small>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+}

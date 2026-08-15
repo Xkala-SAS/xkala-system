@@ -1,0 +1,141 @@
+<div class="employee-dashboard">
+  <div class="hero-card">
+    <div class="hero-left">
+      <div class="avatar">
+        @if (profilePhoto) {
+        <img [src]="profilePhoto" alt="Foto perfil" />
+        } @else {
+        <i class="bi bi-person"></i>
+        }
+      </div>
+
+      <div>
+        <h1>
+          {{ profile?.nombre_completo }}
+        </h1>
+
+        <p>
+          {{ profile?.laboral?.cargo }}
+        </p>
+
+        <span class="role-badge">
+          {{ profile?.rol }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h3>Información laboral</h3>
+
+      <div class="info-row">
+        <span>Cargo</span>
+
+        <strong>
+          {{ profile?.laboral?.cargo }}
+        </strong>
+      </div>
+
+      <div class="info-row">
+        <span>Contrato</span>
+
+        <strong>
+          {{ profile?.laboral?.tipo_contrato }}
+        </strong>
+      </div>
+
+      <div class="info-row">
+        <span>Ingreso</span>
+
+        <strong>
+          {{ profile?.laboral?.fecha_ingreso | date }}
+        </strong>
+      </div>
+
+      <div class="info-row">
+        <span>Estado</span>
+
+        <strong>
+          {{ profile?.laboral?.activo ? 'Activo' : 'Inactivo' }}
+        </strong>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Seguridad Social</h3>
+
+      <div class="info-row">
+        <span>EPS</span>
+
+        <strong>
+          {{ profile?.afiliaciones?.eps }}
+        </strong>
+      </div>
+
+      <div class="info-row">
+        <span>ARL</span>
+
+        <strong>
+          {{ profile?.afiliaciones?.arl }}
+        </strong>
+      </div>
+
+      <div class="info-row">
+        <span>Pensión</span>
+
+        <strong>
+          {{ profile?.afiliaciones?.pension }}
+        </strong>
+      </div>
+
+      <div class="info-row">
+        <span>Cesantías</span>
+
+        <strong>
+          {{ profile?.afiliaciones?.cesantias }}
+        </strong>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Contacto</h3>
+
+      <div class="info-row">
+        <span>Email</span>
+
+        <strong>
+          {{ profile?.email }}
+        </strong>
+      </div>
+
+      @for (contact of profile?.contactos ?? []; track $index) {
+      <div class="info-row">
+        <span>{{ contact.tipo }}</span>
+
+        <strong>
+          {{ contact.valor }}
+        </strong>
+      </div>
+      }
+    </div>
+
+    <div class="card">
+      <h3>Dirección</h3>
+
+      <div class="address">
+        <p>{{ profile?.direccion?.direccion }}</p>
+
+        <p>{{ profile?.direccion?.barrio }}</p>
+
+        <p>
+          {{ profile?.direccion?.ciudad }}
+        </p>
+
+        <p>
+          {{ profile?.direccion?.departamento }}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

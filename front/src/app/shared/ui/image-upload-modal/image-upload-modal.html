@@ -1,0 +1,19 @@
+<app-modal [visible]="visible()" [title]="title()" (closed)="close()">
+  <div class="image-upload-container">
+    @if (previewUrl()) {
+      <img [src]="previewUrl()!" alt="Vista previa" class="preview-image" />
+    } @else {
+      <div class="preview-placeholder">
+        <i class="bi bi-person-circle"></i>
+      </div>
+    }
+
+    <input type="file" accept="image/*" class="form-control mt-3" (change)="onFileChange($event)" />
+
+    <div class="d-flex justify-content-end gap-2 mt-4 w-100">
+      <button class="btn btn-outline-secondary" (click)="close()">Cancelar</button>
+
+      <button class="btn btn-danger" (click)="save.emit()">Guardar cambios</button>
+    </div>
+  </div>
+</app-modal>

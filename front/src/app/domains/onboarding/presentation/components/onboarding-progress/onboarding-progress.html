@@ -1,0 +1,11 @@
+<div class="mb-4">
+  <div class="d-flex justify-content-between mb-2">
+    <span> Paso {{ currentStep() }} de {{ totalSteps() }} </span>
+
+    <span> {{ percentage() }}% </span>
+  </div>
+
+  <div class="progress">
+    <div class="progress-bar bg-danger" role="progressbar" [style.width.%]="percentage()"></div>
+  </div>
+</div>

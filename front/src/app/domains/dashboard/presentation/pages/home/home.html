@@ -1,0 +1,121 @@
+<div class="dashboard-home">
+  <!-- HEADER -->
+
+  <div class="row g-4 mb-4">
+    <div class="col-12">
+      <div class="hero-card">
+        <div>
+          <h1 class="hero-title">Dashboard TI</h1>
+
+          <p class="hero-subtitle">Monitoreo general del ERP XKALA</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPI -->
+
+  <div class="row g-4 mb-4">
+    <div class="col-12 col-sm-6 col-xl-3">
+      <app-kpi-card title="Usuarios" [value]="dashboard?.users?.total ?? 0" icon="bi-people" />
+    </div>
+
+    <div class="col-12 col-sm-6 col-xl-3">
+      <app-kpi-card
+        title="Usuarios Activos"
+        [value]="dashboard?.users?.active ?? 0"
+        icon="bi-person-check"
+      />
+    </div>
+
+    <div class="col-12 col-sm-6 col-xl-3">
+      <app-kpi-card title="Roles" [value]="dashboard?.security?.roles ?? 0" icon="bi-shield-lock" />
+    </div>
+
+    <div class="col-12 col-sm-6 col-xl-3">
+      <app-kpi-card
+        title="Permisos"
+        [value]="dashboard?.security?.permissions ?? 0"
+        icon="bi-key"
+      />
+    </div>
+  </div>
+
+  <div class="row g-4 mb-4">
+    <div class="col-12 col-sm-6 col-xl-4">
+      <app-kpi-card
+        title="Usuarios Inactivos"
+        [value]="dashboard?.users?.inactive ?? 0"
+        icon="bi-person-x"
+      />
+    </div>
+
+    <div class="col-12 col-sm-6 col-xl-4">
+      <app-kpi-card title="Archivos" [value]="dashboard?.documents?.total ?? 0" icon="bi-folder" />
+    </div>
+
+    <div class="col-12 col-sm-6 col-xl-4">
+      <app-kpi-card title="Firmas" [value]="dashboard?.documents?.signatures ?? 0" icon="bi-pen" />
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+
+  <div class="row g-4">
+    <!-- QUICK ACTIONS -->
+
+    <div class="col-12 col-xl-7">
+      <div class="dashboard-card">
+        <div class="section-header">
+          <h3>Accesos rápidos</h3>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-12 col-md-6">
+            <app-quick-action-card
+              title="Usuarios"
+              subtitle="Gestión de usuarios"
+              icon="bi-people"
+            />
+          </div>
+
+          <div class="col-12 col-md-6">
+            <app-quick-action-card
+              title="Roles"
+              subtitle="Gestión de permisos"
+              icon="bi-shield-lock"
+            />
+          </div>
+
+          <div class="col-12 col-md-6">
+            <app-quick-action-card
+              title="Auditoría"
+              subtitle="Logs del sistema"
+              icon="bi-clipboard-data"
+            />
+          </div>
+
+          <div class="col-12 col-md-6">
+            <app-quick-action-card
+              title="Configuración"
+              subtitle="Preferencias generales"
+              icon="bi-gear"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACTIVITY -->
+
+    <div class="col-12 col-xl-5">
+      <div class="dashboard-card">
+        <div class="section-header">
+          <h3>Actividad reciente</h3>
+        </div>
+
+        <app-activity-card />
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,43 @@
+<div class="security-card">
+  <h3>Seguridad</h3>
+
+  <div class="mb-3">
+    <label> Contraseña actual </label>
+
+    <input type="password" class="form-control" [(ngModel)]="currentPassword" />
+  </div>
+
+  <div class="mb-3">
+    <label> Nueva contraseña </label>
+
+    <input type="password" class="form-control" [(ngModel)]="newPassword" />
+  </div>
+
+  <div class="mb-3">
+    <label> Confirmar contraseña </label>
+
+    <input type="password" class="form-control" [(ngModel)]="confirmPassword" />
+  </div>
+
+  @if (successMessage) {
+    <div class="alert alert-success">
+      {{ successMessage }}
+    </div>
+  }
+
+  @if (errorMessage) {
+    <div class="alert alert-danger">
+      {{ errorMessage }}
+    </div>
+  }
+
+  <button class="btn btn-danger" [disabled]="loading" (click)="changePassword()">
+    @if (!loading) {
+      Actualizar contraseña
+    }
+
+    @if (loading) {
+      Guardando...
+    }
+  </button>
+</div>

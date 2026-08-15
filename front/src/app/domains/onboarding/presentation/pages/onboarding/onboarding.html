@@ -1,0 +1,58 @@
+<div class="onboarding-page">
+  <div class="wizard-card">
+    <h2 class="fw-bold mb-2">Bienvenido a XKALA</h2>
+
+    <p class="text-muted mb-4">
+      Recursos Humanos ha creado tu usuario. Antes de acceder al sistema debes completar el
+      siguiente proceso de vinculación.
+    </p>
+
+    <div class="mb-4">
+      <!-- <small class="text-muted fw-semibold"> Paso {{ currentStep }} de {{ totalSteps }} </small> -->
+      <h5 class="fw-semibold mt-2">
+        {{ stepTitles[currentStep - 1] }}
+      </h5>
+
+      <app-onboarding-progress [currentStep]="currentStep" [totalSteps]="totalSteps">
+      </app-onboarding-progress>
+    </div>
+
+    @if (currentStep === 1) {
+      <app-step-personal-info (completed)="nextStep()"> </app-step-personal-info>
+    }
+
+    @if (currentStep === 2) {
+      <app-step-address (completed)="nextStep()"> </app-step-address>
+    }
+
+    @if (currentStep === 3) {
+      <app-step-contacts (completed)="nextStep()"> </app-step-contacts>
+    }
+
+    @if (currentStep === 4) {
+      <app-step-health (completed)="nextStep()"> </app-step-health>
+    }
+
+    @if (currentStep === 5) {
+      <app-step-sizes (completed)="nextStep()"> </app-step-sizes>
+    }
+
+    @if (currentStep === 6) {
+      <app-step-profile-photo (completed)="nextStep()"> </app-step-profile-photo>
+    }
+
+    @if (currentStep === 7) {
+      <app-step-signature (completed)="nextStep()"> </app-step-signature>
+    }
+
+    <div class="mt-4">
+      <button
+        class="btn btn-outline-secondary"
+        (click)="previousStep()"
+        [disabled]="currentStep === 1"
+      >
+        ← Anterior
+      </button>
+    </div>
+  </div>
+</div>

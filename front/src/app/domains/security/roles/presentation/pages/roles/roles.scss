@@ -1,0 +1,32 @@
+.card {
+  border: none;
+
+  border-radius: var(--radius-md);
+
+  background: var(--color-surface-card);
+
+  color: var(--color-text);
+
+  box-shadow: var(--shadow-md);
+}
+
+.table {
+  color: var(--color-text);
+  
+}
+
+.table thead th {
+  color: var(--color-text-muted);
+  background: var(--color-surface-card);
+  
+
+  border-color: var(--color-border);
+}
+
+.table td {
+  color: var(--color-text);
+
+  border-color: var(--color-border);
+  background: var(--color-surface-card);
+
+}

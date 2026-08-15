@@ -1,0 +1,95 @@
+<form (ngSubmit)="save()">
+  <div class="row g-3">
+    <div class="col-md-6">
+      <label class="form-label"> Tipo de documento * </label>
+
+      <select
+        class="form-select"
+        [(ngModel)]="form.document_type_id"
+        name="document_type_id"
+        required
+        #documentType="ngModel"
+      >
+        <option value="">Seleccione...</option>
+
+        @for (item of documentTypes; track item.id) {
+          <option [value]="item.id">
+            {{ item.nombre }}
+          </option>
+        }
+      </select>
+
+      @if (documentType.invalid && documentType.touched) {
+        <small class="text-danger"> Debe seleccionar un tipo de documento </small>
+      }
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label"> Número de documento * </label>
+
+      <input
+        class="form-control"
+        [(ngModel)]="form.numero_documento"
+        name="numero_documento"
+        required
+        #documento="ngModel"
+      />
+
+      @if (documento.invalid && documento.touched) {
+        <small class="text-danger"> El número de documento es obligatorio </small>
+      }
+    </div>
+
+    <div class="col-12">
+      <label class="form-label"> Rol * </label>
+
+      <select
+        class="form-select"
+        [(ngModel)]="form.role_id"
+        name="role_id"
+        required
+        #role="ngModel"
+      >
+        <option value="">Seleccione...</option>
+
+        @for (role of roles; track role.id) {
+          <option [value]="role.id">
+            {{ role.nombre }}
+          </option>
+        }
+      </select>
+
+      @if (role.invalid && role.touched) {
+        <small class="text-danger"> Debe seleccionar un rol </small>
+      }
+    </div>
+
+    <div class="col-12">
+      <div class="alert alert-info mt-3 mb-0">
+        <h6 class="mb-2">Primer ingreso del colaborador</h6>
+
+        <p class="mb-2">El colaborador iniciará sesión utilizando:</p>
+
+        <ul class="mb-2">
+          <li><strong>Usuario:</strong> Número de documento.</li>
+          <li><strong>Contraseña temporal:</strong> Número de documento.</li>
+        </ul>
+
+        <small class="text-muted">
+          En su primer ingreso deberá completar toda su información personal y laboral durante el
+          proceso de onboarding.
+        </small>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-4 text-end">
+    <button type="submit" class="btn btn-danger" [disabled]="loading">
+      @if (loading) {
+        Creando...
+      } @else {
+        Preregistrar colaborador
+      }
+    </button>
+  </div>
+</form>

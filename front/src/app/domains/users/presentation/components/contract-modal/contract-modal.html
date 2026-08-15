@@ -1,0 +1,75 @@
+<app-modal
+  [visible]="visible()"
+  [title]="isEdit() ? 'Editar contrato' : 'Crear contrato'"
+  size="lg"
+  (closed)="close()"
+>
+  <form [formGroup]="form">
+    <div class="mb-3">
+      <label class="form-label"> Cargo </label>
+
+      <select class="form-select" formControlName="position_id">
+        <option value="">Seleccione</option>
+
+        @for (position of positions; track position.id) {
+          <option [value]="position.id">
+            {{ position.nombre }}
+          </option>
+        }
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label"> Tipo contrato </label>
+
+      <select class="form-select" formControlName="contract_type_id">
+        <option value="">Seleccione</option>
+
+        @for (contractType of contractTypes; track contractType.id) {
+          <option [value]="contractType.id">
+            {{ contractType.nombre }}
+          </option>
+        }
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label"> Fecha ingreso </label>
+
+      <input type="date" class="form-control" formControlName="fecha_ingreso" />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label"> Tipo remuneración </label>
+
+      <select class="form-select" formControlName="remuneration_type">
+        <option value="MONTHLY">Mensual</option>
+
+        <option value="DAILY">Por día</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label"> Valor remuneración </label>
+
+      <input type="number" class="form-control" formControlName="remuneration_value" />
+    </div>
+    @if (isEdit()) {
+      <div class="mb-3">
+        <label class="form-label"> Estado laboral </label>
+
+        <select class="form-select" formControlName="estado_laboral">
+          <option [ngValue]="true">Activo</option>
+
+          <option [ngValue]="false">Inactivo</option>
+        </select>
+      </div>
+    }
+  </form>
+
+  <div class="d-flex justify-content-end">
+    <button class="btn btn-secondary me-2" (click)="close()">Cancelar</button>
+
+    <button class="btn btn-danger" (click)="save()" [disabled]="form.invalid">Guardar</button>
+  </div>
+</app-modal>

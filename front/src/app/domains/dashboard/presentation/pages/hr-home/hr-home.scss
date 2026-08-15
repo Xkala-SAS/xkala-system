@@ -1,0 +1,25 @@
+.dashboard-home {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.hero-card {
+  background: var(--color-surface-card);
+
+  border: 1px solid var(--color-border);
+
+  border-radius: var(--radius-md);
+
+  padding: var(--space-6);
+
+  box-shadow: var(--shadow-md);
+}
+
+.hero-card h1 {
+  color: var(--color-text);
+}
+
+.hero-card p {
+  color: var(--color-text-muted);
+}

@@ -1,0 +1,93 @@
+<div class="dashboard-layout">
+  @if (sidebarOpen) {
+    <div class="sidebar-overlay" (click)="closeSidebar()"></div>
+  }
+  <aside class="sidebar" [class.sidebar-open]="sidebarOpen">
+    <div class="sidebar-brand">
+      <img src="images/logo-xkala.png" alt="XKALA" class="sidebar-logo" />
+
+    </div>
+
+    <nav class="sidebar-menu">
+      @for (item of menuItems(); track item.label) {
+        @if (!item.children) {
+          <a [routerLink]="item.route" routerLinkActive="active" (click)="closeSidebar()">
+            <i class="bi" [class]="item.icon"></i>
+
+            <span>
+              {{ item.label }}
+            </span>
+          </a>
+        } @else {
+          <div class="menu-group">
+            <div class="menu-group-title">
+              <i class="bi" [class]="item.icon"></i>
+
+              <span>
+                {{ item.label }}
+              </span>
+            </div>
+
+            <div class="menu-group-items">
+              @for (child of item.children; track child.label) {
+                <a
+                  [routerLink]="child.route"
+                  routerLinkActive="active"
+                  class="submenu-item"
+                  (click)="closeSidebar()"
+                >
+                  <i class="bi" [class]="child.icon"></i>
+
+                  <span>
+                    {{ child.label }}
+                  </span>
+                </a>
+              }
+            </div>
+          </div>
+        }
+      }
+    </nav>
+    <div class="sidebar-footer">
+      <button class="logout-btn" (click)="logout()">
+        <i class="bi bi-box-arrow-right"></i>
+
+        <span> Cerrar sesión </span>
+      </button>
+    </div>
+  </aside>
+
+  <div class="dashboard-content">
+    <header class="topbar">
+      <button class="menu-btn d-lg-none" (click)="toggleSidebar()">
+        <i class="bi bi-list"></i>
+      </button>
+
+      <div class="topbar-right">
+        <div class="user-box">
+          <div class="user-avatar">
+            @if (profile?.profile_photo) {
+              <img [src]="apiUrl + profile?.profile_photo" alt="profile" />
+            } @else {
+              {{ profile?.nombre_completo?.charAt(0) }}
+            }
+          </div>
+
+          <div>
+            <strong>
+              {{ profile?.nombre_completo }}
+            </strong>
+
+            <small class="d-block text-muted">
+              {{ profile?.rol }}
+            </small>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-content">
+      <router-outlet />
+    </main>
+  </div>
+</div>

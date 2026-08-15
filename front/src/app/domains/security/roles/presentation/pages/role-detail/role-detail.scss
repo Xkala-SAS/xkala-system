@@ -1,0 +1,45 @@
+.hero-card {
+  background: var(--color-surface-card);
+
+  border-radius: var(--radius-md);
+
+  padding: var(--space-6);
+
+  border: 1px solid var(--color-border);
+
+  color: var(--color-text);
+}
+
+.hero-card p {
+  color: var(--color-text-muted);
+
+  margin-top: 0.5rem;
+}
+
+.card {
+  background: var(--color-surface-card);
+
+  border: 1px solid var(--color-border);
+
+  color: var(--color-text);
+}
+
+.permission-card {
+  background: var(--color-surface);
+
+  border: 1px solid var(--color-border);
+
+  border-radius: var(--radius-sm);
+
+  padding: var(--space-4);
+
+  height: 100%;
+}
+
+.permission-card small {
+  display: block;
+
+  margin-top: 0.5rem;
+
+  color: var(--color-text-muted);
+}

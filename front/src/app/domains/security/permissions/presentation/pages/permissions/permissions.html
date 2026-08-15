@@ -1,0 +1,25 @@
+<div class="hero-card mb-4">
+  <div>
+    <h1 class="hero-title">Permisos</h1>
+
+    <p class="hero-subtitle">Acciones disponibles dentro del sistema</p>
+  </div>
+</div>
+
+<div class="row g-4">
+  @for (permission of permissions; track permission.id) {
+    <div class="col-md-6 col-xl-4">
+      <div class="module-card">
+        <i class="bi bi-key"></i>
+
+        <h5>
+          {{ permission.codigo }}
+        </h5>
+
+        <p>
+          {{ permission.descripcion }}
+        </p>
+      </div>
+    </div>
+  }
+</div>

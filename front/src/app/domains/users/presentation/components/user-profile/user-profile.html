@@ -1,0 +1,535 @@
+@if (loading) {
+  <div class="text-center py-4">
+    <div class="spinner-border text-danger"></div>
+  </div>
+} @else if (profile) {
+  <!-- HEADER -->
+
+  <div class="profile-header">
+    <div class="profile-avatar-wrapper">
+      <div class="profile-avatar">
+        @if (profile.profile_photo) {
+          <img
+            [src]="apiUrl + profile.profile_photo + '?v=' + imageVersion"
+            [alt]="profile.nombre_completo"
+          />
+        } @else {
+          <i class="bi bi-person-circle"></i>
+        }
+      </div>
+
+      <button class="btn btn-outline-secondary btn-sm mt-2" (click)="openPhotoModal()">
+        <i class="bi bi-pencil"></i>
+
+        Editar foto
+      </button>
+    </div>
+
+    <div class="flex-grow-1">
+      <h3 class="fw-bold mb-1">
+        {{ profile.nombre_completo }}
+      </h3>
+
+      <div class="text-danger fw-semibold">
+        {{ profile.rol }}
+      </div>
+
+      <p class="text-muted mb-2">
+        {{ profile.email }}
+      </p>
+
+      @if (profile.laboral?.fecha_ingreso) {
+        <div class="small text-muted">
+          Ingreso:
+          {{ profile.laboral?.fecha_ingreso }}
+        </div>
+      }
+
+      <div class="small text-secondary">
+        ID:
+        {{ profile.id }}
+      </div>
+
+      @if (profile.signature) {
+        <button class="btn btn-sm btn-outline-secondary mt-2" (click)="viewSignature()">
+          Ver firma
+        </button>
+      }
+
+      <div class="d-flex gap-2 mt-2 flex-wrap">
+        <span
+          class="badge"
+          [class.text-bg-success]="profile.estado"
+          [class.text-bg-danger]="!profile.estado"
+        >
+          {{ profile.estado ? 'Activo' : 'Inactivo' }}
+        </span>
+
+        <span class="badge text-bg-primary">
+          {{ profile.rol }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="profile-tabs">
+    <button class="tab-button" [class.active]="activeTab === 'info'" (click)="activeTab = 'info'">
+      <i class="bi bi-person-vcard"></i>
+      Información
+    </button>
+
+    <button
+      class="tab-button"
+      [class.active]="activeTab === 'documents'"
+      (click)="activeTab = 'documents'"
+    >
+      <i class="bi bi-file-earmark-text"></i>
+      Documentos
+    </button>
+
+    <button class="tab-button" [class.active]="activeTab === 'files'" (click)="activeTab = 'files'">
+      <i class="bi bi-images"></i>
+      Archivos
+    </button>
+
+    <button
+      class="tab-button"
+      [class.active]="activeTab === 'laboral'"
+      (click)="activeTab = 'laboral'"
+    >
+      <i class="bi bi-briefcase"></i>
+
+      Laboral
+    </button>
+
+    <button
+      class="tab-button"
+      [class.active]="activeTab === 'afiliaciones'"
+      (click)="activeTab = 'afiliaciones'"
+    >
+      <i class="bi bi-heart-pulse"></i>
+
+      Afiliaciones
+    </button>
+
+    <button
+      class="tab-button"
+      [class.active]="activeTab === 'direccion'"
+      (click)="activeTab = 'direccion'"
+    >
+      <i class="bi bi-geo-alt"></i>
+
+      Dirección
+    </button>
+
+    <button
+      class="tab-button"
+      [class.active]="activeTab === 'contactos'"
+      (click)="activeTab = 'contactos'"
+    >
+      <i class="bi bi-telephone"></i>
+
+      Contactos
+    </button>
+
+    <button class="tab-button" [class.active]="activeTab === 'audit'" (click)="activeTab = 'audit'">
+      <i class="bi bi-clock-history"></i>
+
+      Auditoría
+    </button>
+  </div>
+
+  @if (activeTab === 'info') {
+    <div class="row g-3">
+      <!-- DOCUMENTO -->
+
+      <div class="col-12 col-lg-6">
+        <div class="card h-100 profile-card">
+          <div class="card-header">Documento</div>
+
+          <div class="card-body">
+            @if (profile.documento) {
+              <div class="profile-item">
+                <span>Tipo</span>
+
+                <strong>
+                  {{ profile.documento.tipo }}
+                </strong>
+              </div>
+
+              <div class="profile-item">
+                <span>Número</span>
+
+                <strong>
+                  {{ profile.documento.numero }}
+                </strong>
+              </div>
+            } @else {
+              <span class="text-muted"> No registrado </span>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- DATOS -->
+
+      <div class="col-12 col-lg-6">
+        <div class="card h-100 profile-card">
+          <div class="card-header">Datos Generales</div>
+
+          <div class="card-body">
+            <div class="profile-item">
+              <span>Correo</span>
+
+              <strong>
+                {{ profile.email }}
+              </strong>
+            </div>
+
+            <div class="profile-item">
+              <span>Rol</span>
+
+              <strong>
+                {{ profile.rol }}
+              </strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TALLAS -->
+
+      <div class="col-12 col-lg-6">
+        <div class="card h-100 profile-card">
+          <div class="card-header">Tallas</div>
+
+          <div class="card-body">
+            @if (profile.tallas) {
+              <div class="profile-item">
+                <span>Camisa</span>
+
+                <strong>
+                  {{ profile.tallas.camisa }}
+                </strong>
+              </div>
+
+              <div class="profile-item">
+                <span>Pantalón</span>
+
+                <strong>
+                  {{ profile.tallas.pantalon }}
+                </strong>
+              </div>
+
+              <div class="profile-item">
+                <span>Zapato</span>
+
+                <strong>
+                  {{ profile.tallas.zapato }}
+                </strong>
+              </div>
+            } @else {
+              <span class="text-muted"> No registradas </span>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (activeTab === 'documents') {
+    <app-user-documents class="d-block mt-4" [userId]="userId()" />
+  }
+
+  @if (activeTab === 'files') {
+    <div class="row g-3 mt-2">
+      <div class="col-md-6">
+        <div class="card profile-card">
+          <div class="card-header">Foto de Perfil</div>
+
+          <div class="card-body text-center">
+            @if (profile.profile_photo) {
+              <img
+                [src]="apiUrl + profile.profile_photo + '?v=' + imageVersion"
+                class="img-fluid rounded"
+                style="max-height: 300px"
+              />
+            } @else {
+              <i class="bi bi-person-circle" style="font-size: 6rem"></i>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card profile-card">
+          <div class="card-header">Firma</div>
+
+          <div class="card-body text-center">
+            @if (profile.signature) {
+              <img [src]="apiUrl + profile.signature" class="img-fluid" style="max-height: 300px" />
+            } @else {
+              <span class="text-muted"> Sin firma registrada </span>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (activeTab === 'laboral') {
+    <div class="row g-3 mt-2">
+      <div class="col-12 col-lg-6">
+        <div class="card profile-card">
+          <div class="card-header">Información Laboral</div>
+
+          <div class="card-body">
+            @if (profile.laboral) {
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                      <small class="text-muted"> Cargo </small>
+
+                      <h5 class="mb-0">
+                        {{ profile.laboral.cargo }}
+                      </h5>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                      <small class="text-muted"> Tipo de contrato </small>
+
+                      <h5 class="mb-0">
+                        {{ profile.laboral.tipo_contrato }}
+                      </h5>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                      <small class="text-muted"> Fecha de ingreso </small>
+
+                      <h5 class="mb-0">
+                        {{ profile.laboral.fecha_ingreso | date: 'dd/MM/yyyy' }}
+                      </h5>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                      <small class="text-muted"> Tipo remuneración </small>
+
+                      <h5 class="mb-0">
+                        {{ profile.laboral.remuneration_type === 'MONTHLY' ? 'Mensual' : 'Diaria' }}
+                      </h5>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                      <small class="text-muted"> Salario </small>
+
+                      <h4 class="text-success mb-0">
+                        {{
+                          profile.laboral.remuneration_value | currency: 'COP' : 'symbol' : '1.0-0'
+                        }}
+                      </h4>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                      <small class="text-muted"> Estado laboral </small>
+
+                      <div class="mt-2">
+                        <span
+                          class="badge"
+                          [class.text-bg-success]="profile.laboral.activo"
+                          [class.text-bg-danger]="!profile.laboral.activo"
+                        >
+                          {{ profile.laboral.activo ? 'Activo' : 'Inactivo' }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            } @else {
+              <span class="text-muted"> No existe información laboral </span>
+            }
+            <div class="mt-3">
+              <button class="btn btn-danger btn-sm" (click)="openContractModal()">
+                <i class="bi bi-pencil-square"></i>
+
+                {{ profile.laboral ? 'Editar contrato' : 'Crear contrato' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (activeTab === 'afiliaciones') {
+    <div class="row g-3 mt-2">
+      <div class="col-12 col-lg-6">
+        <div class="card profile-card">
+          <div class="card-header">Seguridad Social</div>
+
+          <div class="card-body">
+            @if (profile.afiliaciones) {
+              <div class="profile-item">
+                <span>EPS</span>
+
+                <strong>
+                  {{ profile.afiliaciones.eps || 'N/A' }}
+                </strong>
+              </div>
+
+              <div class="profile-item">
+                <span>ARL</span>
+
+                <strong>
+                  {{ profile.afiliaciones.arl || 'N/A' }}
+                </strong>
+              </div>
+
+              <div class="profile-item">
+                <span>Pensión</span>
+
+                <strong>
+                  {{ profile.afiliaciones.pension || 'N/A' }}
+                </strong>
+              </div>
+
+              <div class="profile-item">
+                <span>Cesantías</span>
+
+                <strong>
+                  {{ profile.afiliaciones.cesantias || 'N/A' }}
+                </strong>
+              </div>
+            } @else {
+              <span class="text-muted"> No existen afiliaciones registradas </span>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (activeTab === 'direccion') {
+    <div class="row g-3 mt-2">
+      <div class="col-12 col-lg-6">
+        <div class="card profile-card">
+          <div class="card-header">Dirección de residencia</div>
+
+          <div class="card-body">
+            @if (profile.direccion) {
+              <div class="profile-item">
+                <span>Dirección</span>
+
+                <strong>
+                  {{ profile.direccion.direccion }}
+                </strong>
+              </div>
+
+              <div class="profile-item">
+                <span>Barrio</span>
+
+                <strong>
+                  {{ profile.direccion.barrio || 'N/A' }}
+                </strong>
+              </div>
+
+              <div class="profile-item">
+                <span>Ciudad</span>
+
+                <strong>
+                  {{ profile.direccion.ciudad || 'N/A' }}
+                </strong>
+              </div>
+
+              <div class="profile-item">
+                <span>Departamento</span>
+
+                <strong>
+                  {{ profile.direccion.departamento || 'N/A' }}
+                </strong>
+              </div>
+            } @else {
+              <span class="text-muted"> No existe dirección registrada </span>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (activeTab === 'contactos') {
+    <div class="row g-3 mt-2">
+      <div class="col-12 col-lg-8">
+        <div class="card profile-card">
+          <div class="card-header">Información de contacto</div>
+
+          <div class="card-body">
+            @if (profile.contactos.length > 0) {
+              @for (contacto of profile.contactos; track $index) {
+                <div class="contact-item">
+                  <div>
+                    <div class="fw-semibold">
+                      {{ contacto.tipo }}
+                    </div>
+
+                    <div class="text-muted">
+                      {{ contacto.valor }}
+                    </div>
+                  </div>
+
+                  @if (contacto.principal) {
+                    <span class="badge text-bg-success"> Principal </span>
+                  }
+                </div>
+              }
+            } @else {
+              <span class="text-muted"> No existen contactos registrados </span>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (activeTab === 'audit') {
+    <app-user-audit-logs [userId]="userId()" />
+  }
+
+  <app-image-upload-modal
+    [visible]="showPhotoModal"
+    [previewUrl]="previewPhoto"
+    title="Cambiar foto de perfil"
+    (closed)="closePhotoModal()"
+    (fileSelected)="onNewPhoto($event)"
+    (save)="uploadProfilePhoto()"
+  />
+
+  <app-contract-modal
+    [visible]="showContractModal"
+    [isEdit]="!!profile?.laboral"
+    [userId]="userId()"
+    (closed)="closeContractModal()"
+    (saved)="loadProfile()"
+  />
+}

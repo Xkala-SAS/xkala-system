@@ -1,0 +1,108 @@
+.onboarding-page {
+
+    width: 100%;
+
+    min-height: 100vh;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: flex-start;
+
+    padding: var(--space-6);
+
+    background: transparent;
+}
+
+.wizard-card {
+
+    width: 100%;
+
+    max-width: 950px;
+
+    background: var(--color-surface-card);
+
+    border: 1px solid var(--color-border);
+
+    border-radius: var(--radius-md);
+
+    box-shadow: var(--shadow-md);
+
+    padding: var(--space-6);
+}
+
+.step-title{
+
+    color: var(--color-text);
+
+    font-weight:700;
+}
+
+.step-subtitle{
+
+    color: var(--color-text-muted);
+}
+
+.step-divider{
+
+    height:1px;
+
+    background:var(--color-border);
+
+    margin:var(--space-5) 0;
+}
+
+.onboarding-footer{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-top:var(--space-6);
+}
+
+
+.form-select{
+
+    background: var(--color-surface-light);
+
+    border:1px solid var(--color-border);
+
+    color:var(--color-text);
+
+}
+
+.form-select:focus{
+
+    border-color:var(--color-primary);
+
+    box-shadow:none;
+
+}
+
+.form-select option{
+
+    background:var(--color-surface-card);
+
+    color:var(--color-text);
+
+}
+
+@media (max-width:768px){
+
+    .onboarding-page{
+
+        padding:var(--space-4);
+
+    }
+
+    .wizard-card{
+
+        padding:var(--space-4);
+
+    }
+
+}

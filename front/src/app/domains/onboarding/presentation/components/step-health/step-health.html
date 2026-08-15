@@ -1,0 +1,62 @@
+
+<form [formGroup]="form">
+  <div class="mb-3">
+    <label class="form-label"> EPS </label>
+
+    <select class="form-select" formControlName="eps_id">
+      <option value="">Seleccione EPS</option>
+
+      @for (item of eps; track item.id) {
+        <option [value]="item.id">
+          {{ item.nombre }}
+        </option>
+      }
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label"> ARL </label>
+
+    <select class="form-select" formControlName="arl_id">
+      <option value="">Seleccione ARL</option>
+
+      @for (item of arls; track item.id) {
+        <option [value]="item.id">
+          {{ item.nombre }}
+        </option>
+      }
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label"> Fondo de pensión </label>
+
+    <select class="form-select" formControlName="pension_fund_id">
+      <option value="">Seleccione fondo</option>
+
+      @for (item of pensionFunds; track item.id) {
+        <option [value]="item.id">
+          {{ item.nombre }}
+        </option>
+      }
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label"> Fondo de cesantías </label>
+
+    <select class="form-select" formControlName="severance_fund_id">
+      <option value="">Seleccione fondo</option>
+
+      @for (item of severanceFunds; track item.id) {
+        <option [value]="item.id">
+          {{ item.nombre }}
+        </option>
+      }
+    </select>
+  </div>
+
+  <button type="button" class="btn btn-danger" [disabled]="form.invalid" (click)="save()">
+    Guardar y continuar
+  </button>
+</form>

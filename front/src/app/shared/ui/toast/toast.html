@@ -1,0 +1,21 @@
+@if (toastService.visible()) {
+  <div
+    class="toast-container-custom"
+    [class.success]="toastService.type() === 'success'"
+    [class.error]="toastService.type() === 'error'"
+    [class.warning]="toastService.type() === 'warning'"
+  >
+    <div class="toast-content">
+      <i
+        class="bi"
+        [class.bi-check-circle]="toastService.type() === 'success'"
+        [class.bi-x-circle]="toastService.type() === 'error'"
+        [class.bi-exclamation-triangle]="toastService.type() === 'warning'"
+      ></i>
+
+      <span>
+        {{ toastService.message() }}
+      </span>
+    </div>
+  </div>
+}
